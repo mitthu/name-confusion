@@ -15,9 +15,6 @@ import (
 const LogFile string = "examples/logs-1.auditd"
 const AuditdSep string = "----"
 
-var AuSyscalls map[string]string
-var Inodes map[string]Inode
-
 /* Holds parsed auditd records */
 type Record struct {
 	Type      string
@@ -37,6 +34,11 @@ type Inode struct {
 	Syscall   string
 	Proctitle string
 }
+
+type InodeMap map[string]Inode
+
+var AuSyscalls map[string]string
+var Inodes InodeMap
 
 func check(err error) {
 	if err != nil {
@@ -66,7 +68,7 @@ func PopulateAuSyscalls() {
 
 func main() {
 	fmt.Println("Name confusion monitoring utility")
-	Inodes = make(map[string]Inode)
+	Inodes = make(InodeMap)
 	PopulateAuSyscalls()
 
 	/* parse cmdline args */
@@ -76,26 +78,18 @@ func main() {
 		logfile = args[1]
 	}
 
-	/* read & parse the logs */
-	rawLogs := ReadLog(logfile)
-	// fmt.Println(rawLogs)
-
-	ParseLog(rawLogs)
-	// fmt.Println(Inodes)
+	/* main logic */
+	ParseLog(logfile)
 }
 
-func ReadLog(file string) string {
+func ParseLog(file string) {
 	content, err := ioutil.ReadFile(file)
 	check(err)
 
-	logs := string(content)
-	return logs
-}
+	contentStr := string(content)
+	lines := strings.Split(contentStr, "\n")
 
-func ParseLog(rawLogs string) {
-	lines := strings.Split(rawLogs, "\n")
 	var recordLines []string
-
 	for _, line := range lines {
 		if line == AuditdSep {
 			r := ParseRecords(recordLines)
