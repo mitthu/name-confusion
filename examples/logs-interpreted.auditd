@@ -1,0 +1,155 @@
+----
+type=CONFIG_CHANGE msg=audit(07/07/2021 14:54:51.223:668) : auid=mitthu ses=7962 op=add_rule key=icase list=exit res=yes 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.223:671) : proctitle=/bin/bash ./nc-scenarios.sh 
+type=PATH msg=audit(07/07/2021 14:54:51.223:671) : item=2 name=/lib64/ld-linux-x86-64.so.2 inode=3407921 dev=08:03 mode=file,755 ouid=root ogid=root rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=PATH msg=audit(07/07/2021 14:54:51.223:671) : item=1 name=/bin/bash inode=1572892 dev=08:03 mode=file,755 ouid=root ogid=root rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=PATH msg=audit(07/07/2021 14:54:51.223:671) : item=0 name=./nc-scenarios.sh inode=157 dev=00:39 mode=file,755 ouid=mitthu ogid=mitthu rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=CWD msg=audit(07/07/2021 14:54:51.223:671) : cwd=/mercury/research/casefolding/name-confusion 
+type=EXECVE msg=audit(07/07/2021 14:54:51.223:671) : argc=2 a0=/bin/bash a1=./nc-scenarios.sh 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.223:671) : arch=x86_64 syscall=execve success=yes exit=0 a0=0x555a92683700 a1=0x555a9264e070 a2=0x555a92808570 a3=0x8 items=3 ppid=26203 pid=10377 auid=mitthu uid=mitthu gid=mitthu euid=mitthu suid=mitthu fsuid=mitthu egid=mitthu sgid=mitthu fsgid=mitthu tty=pts7 ses=7962 comm=nc-scenarios.sh exe=/bin/bash key=icase 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.227:672) : proctitle=/bin/bash ./nc-scenarios.sh 
+type=PATH msg=audit(07/07/2021 14:54:51.227:672) : item=0 name=./nc-scenarios.sh inode=157 dev=00:39 mode=file,755 ouid=mitthu ogid=mitthu rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=CWD msg=audit(07/07/2021 14:54:51.227:672) : cwd=/mercury/research/casefolding/name-confusion 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.227:672) : arch=x86_64 syscall=openat success=yes exit=3 a0=0xffffff9c a1=0x55bcdb5b6330 a2=O_RDONLY a3=0x0 items=1 ppid=26203 pid=10377 auid=mitthu uid=mitthu gid=mitthu euid=mitthu suid=mitthu fsuid=mitthu egid=mitthu sgid=mitthu fsgid=mitthu tty=pts7 ses=7962 comm=nc-scenarios.sh exe=/bin/bash key=icase 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.227:673) : proctitle=/bin/bash ./nc-scenarios.sh 
+type=PATH msg=audit(07/07/2021 14:54:51.227:673) : item=0 name=/mercury/research/casefolding/tmp/ inode=642 dev=00:39 mode=dir,775 ouid=mitthu ogid=mitthu rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=CWD msg=audit(07/07/2021 14:54:51.227:673) : cwd=/mercury/research/casefolding/name-confusion 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.227:673) : arch=x86_64 syscall=openat success=yes exit=3 a0=0xffffff9c a1=0x55bcdb5d8970 a2=O_RDONLY|O_NONBLOCK|O_DIRECTORY|O_CLOEXEC a3=0x0 items=1 ppid=26203 pid=10377 auid=mitthu uid=mitthu gid=mitthu euid=mitthu suid=mitthu fsuid=mitthu egid=mitthu sgid=mitthu fsgid=mitthu tty=pts7 ses=7962 comm=nc-scenarios.sh exe=/bin/bash key=icase 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.231:674) : proctitle=rm -f /mercury/research/casefolding/tmp/ROOT /mercury/research/caseaware/tmp/root /mercury/research/caseaware/tmp/ROOT 
+type=PATH msg=audit(07/07/2021 14:54:51.231:674) : item=1 name=/mercury/research/casefolding/tmp/ROOT inode=664 dev=00:39 mode=fifo,777 ouid=mitthu ogid=mitthu rdev=00:00 nametype=DELETE cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=PATH msg=audit(07/07/2021 14:54:51.231:674) : item=0 name=/mercury/research/casefolding/tmp/ inode=642 dev=00:39 mode=dir,775 ouid=mitthu ogid=mitthu rdev=00:00 nametype=PARENT cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=CWD msg=audit(07/07/2021 14:54:51.231:674) : cwd=/mercury/research/casefolding/name-confusion 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.231:674) : arch=x86_64 syscall=unlinkat success=yes exit=0 a0=0xffffff9c a1=0x562c1adc9490 a2=0x0 a3=0x562c1adc8010 items=2 ppid=10377 pid=10378 auid=mitthu uid=mitthu gid=mitthu euid=mitthu suid=mitthu fsuid=mitthu egid=mitthu sgid=mitthu fsgid=mitthu tty=pts7 ses=7962 comm=rm exe=/bin/rm key=icase 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.231:675) : proctitle=touch /mercury/research/casefolding/tmp/tmpfile 
+type=PATH msg=audit(07/07/2021 14:54:51.231:675) : item=1 name=/mercury/research/casefolding/tmp/tmpfile inode=90 dev=00:39 mode=file,664 ouid=mitthu ogid=mitthu rdev=00:00 nametype=CREATE cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=PATH msg=audit(07/07/2021 14:54:51.231:675) : item=0 name=/mercury/research/casefolding/tmp/ inode=642 dev=00:39 mode=dir,775 ouid=mitthu ogid=mitthu rdev=00:00 nametype=PARENT cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=CWD msg=audit(07/07/2021 14:54:51.231:675) : cwd=/mercury/research/casefolding/name-confusion 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.231:675) : arch=x86_64 syscall=openat success=yes exit=3 a0=0xffffff9c a1=0x7ffe856026ef a2=O_WRONLY|O_CREAT|O_NOCTTY|O_NONBLOCK a3=0x1b6 items=2 ppid=10377 pid=10379 auid=mitthu uid=mitthu gid=mitthu euid=mitthu suid=mitthu fsuid=mitthu egid=mitthu sgid=mitthu fsgid=mitthu tty=pts7 ses=7962 comm=touch exe=/bin/touch key=icase 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.235:676) : proctitle=touch /mercury/research/casefolding/tmp/TMPFILE 
+type=PATH msg=audit(07/07/2021 14:54:51.235:676) : item=1 name=/mercury/research/casefolding/tmp/TMPFILE inode=90 dev=00:39 mode=file,664 ouid=mitthu ogid=mitthu rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=PATH msg=audit(07/07/2021 14:54:51.235:676) : item=0 name=/mercury/research/casefolding/tmp/ inode=642 dev=00:39 mode=dir,775 ouid=mitthu ogid=mitthu rdev=00:00 nametype=PARENT cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=CWD msg=audit(07/07/2021 14:54:51.235:676) : cwd=/mercury/research/casefolding/name-confusion 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.235:676) : arch=x86_64 syscall=openat success=yes exit=3 a0=0xffffff9c a1=0x7ffe941216ef a2=O_WRONLY|O_CREAT|O_NOCTTY|O_NONBLOCK a3=0x1b6 items=2 ppid=10377 pid=10381 auid=mitthu uid=mitthu gid=mitthu euid=mitthu suid=mitthu fsuid=mitthu egid=mitthu sgid=mitthu fsgid=mitthu tty=pts7 ses=7962 comm=touch exe=/bin/touch key=icase 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.239:677) : proctitle=rm /mercury/research/casefolding/tmp/tmpfile 
+type=PATH msg=audit(07/07/2021 14:54:51.239:677) : item=1 name=/mercury/research/casefolding/tmp/tmpfile inode=90 dev=00:39 mode=file,664 ouid=mitthu ogid=mitthu rdev=00:00 nametype=DELETE cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=PATH msg=audit(07/07/2021 14:54:51.239:677) : item=0 name=/mercury/research/casefolding/tmp/ inode=642 dev=00:39 mode=dir,775 ouid=mitthu ogid=mitthu rdev=00:00 nametype=PARENT cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=CWD msg=audit(07/07/2021 14:54:51.239:677) : cwd=/mercury/research/casefolding/name-confusion 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.239:677) : arch=x86_64 syscall=unlinkat success=yes exit=0 a0=0xffffff9c a1=0x55556d673490 a2=0x0 a3=0x100 items=2 ppid=10377 pid=10383 auid=mitthu uid=mitthu gid=mitthu euid=mitthu suid=mitthu fsuid=mitthu egid=mitthu sgid=mitthu fsgid=mitthu tty=pts7 ses=7962 comm=rm exe=/bin/rm key=icase 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.239:678) : proctitle=/bin/bash ./nc-scenarios.sh 
+type=PATH msg=audit(07/07/2021 14:54:51.239:678) : item=0 name=/mercury/research/casefolding/tmp/ inode=642 dev=00:39 mode=dir,775 ouid=mitthu ogid=mitthu rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=CWD msg=audit(07/07/2021 14:54:51.239:678) : cwd=/mercury/research/casefolding/name-confusion 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.239:678) : arch=x86_64 syscall=openat success=yes exit=3 a0=0xffffff9c a1=0x55bcdb5daa10 a2=O_RDONLY|O_NONBLOCK|O_DIRECTORY|O_CLOEXEC a3=0x0 items=1 ppid=26203 pid=10377 auid=mitthu uid=mitthu gid=mitthu euid=mitthu suid=mitthu fsuid=mitthu egid=mitthu sgid=mitthu fsgid=mitthu tty=pts7 ses=7962 comm=nc-scenarios.sh exe=/bin/bash key=icase 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.239:679) : proctitle=rm -f /mercury/research/casefolding/tmp/* /mercury/research/caseaware/tmp/* 
+type=PATH msg=audit(07/07/2021 14:54:51.239:679) : item=0 name=/mercury/research/casefolding/tmp/ inode=642 dev=00:39 mode=dir,775 ouid=mitthu ogid=mitthu rdev=00:00 nametype=PARENT cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=CWD msg=audit(07/07/2021 14:54:51.239:679) : cwd=/mercury/research/casefolding/name-confusion 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.239:679) : arch=x86_64 syscall=unlinkat success=no exit=ENOENT(No such file or directory) a0=0xffffff9c a1=0x55c2ac5fe490 a2=0x0 a3=0x55c2ac5fd010 items=1 ppid=10377 pid=10384 auid=mitthu uid=mitthu gid=mitthu euid=mitthu suid=mitthu fsuid=mitthu egid=mitthu sgid=mitthu fsgid=mitthu tty=pts7 ses=7962 comm=rm exe=/bin/rm key=icase 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.311:688) : proctitle=cp -a /mercury/research/caseaware/tmp/root /mercury/research/caseaware/tmp/ROOT /mercury/research/casefolding/tmp/ 
+type=PATH msg=audit(07/07/2021 14:54:51.311:688) : item=1 name=/mercury/research/casefolding/tmp/root inode=665 dev=00:39 mode=file,700 ouid=root ogid=root rdev=00:00 nametype=CREATE cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=PATH msg=audit(07/07/2021 14:54:51.311:688) : item=0 name=/mercury/research/casefolding/tmp/ inode=642 dev=00:39 mode=dir,775 ouid=mitthu ogid=mitthu rdev=00:00 nametype=PARENT cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=CWD msg=audit(07/07/2021 14:54:51.311:688) : cwd=/mercury/research/casefolding/name-confusion 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.311:688) : arch=x86_64 syscall=openat success=yes exit=4 a0=0xffffff9c a1=0x55b48b946da0 a2=O_WRONLY|O_CREAT|O_EXCL a3=0x1c0 items=2 ppid=10390 pid=10391 auid=mitthu uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=pts7 ses=7962 comm=cp exe=/bin/cp key=icase 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.311:689) : proctitle=cp -a /mercury/research/caseaware/tmp/root /mercury/research/caseaware/tmp/ROOT /mercury/research/casefolding/tmp/ 
+type=PATH msg=audit(07/07/2021 14:54:51.311:689) : item=0 name=(null) inode=665 dev=00:39 mode=file,700 ouid=root ogid=root rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.311:689) : arch=x86_64 syscall=fsetxattr success=no exit=EOPNOTSUPP(Operation not supported) a0=0x4 a1=0x7f18457e8b5f a2=0x55b48b946f40 a3=0x1c items=1 ppid=10390 pid=10391 auid=mitthu uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=pts7 ses=7962 comm=cp exe=/bin/cp key=icase 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.311:690) : proctitle=cp -a /mercury/research/caseaware/tmp/root /mercury/research/caseaware/tmp/ROOT /mercury/research/casefolding/tmp/ 
+type=PATH msg=audit(07/07/2021 14:54:51.311:690) : item=0 name=(null) inode=665 dev=00:39 mode=file,700 ouid=root ogid=root rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.311:690) : arch=x86_64 syscall=fchmod success=yes exit=0 a0=0x4 a1=0700 a2=0x81c0 a3=0x9 items=1 ppid=10390 pid=10391 auid=mitthu uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=pts7 ses=7962 comm=cp exe=/bin/cp key=icase 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.311:691) : proctitle=cp -a /mercury/research/caseaware/tmp/root /mercury/research/caseaware/tmp/ROOT /mercury/research/casefolding/tmp/ 
+type=PATH msg=audit(07/07/2021 14:54:51.311:691) : item=2 name=(null) inode=665 dev=00:39 mode=file,700 ouid=root ogid=root rdev=00:00 nametype=DELETE cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=PATH msg=audit(07/07/2021 14:54:51.311:691) : item=1 name=(null) inode=642 dev=00:39 mode=dir,775 ouid=mitthu ogid=mitthu rdev=00:00 nametype=PARENT cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=PATH msg=audit(07/07/2021 14:54:51.311:691) : item=0 name=/mercury/research/casefolding/tmp/ inode=642 dev=00:39 mode=dir,775 ouid=mitthu ogid=mitthu rdev=00:00 nametype=PARENT cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=CWD msg=audit(07/07/2021 14:54:51.311:691) : cwd=/mercury/research/casefolding/name-confusion 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.311:691) : arch=x86_64 syscall=unlink success=yes exit=0 a0=0x55b48b946da0 a1=0x0 a2=0x8000 a3=0x55b48b944010 items=3 ppid=10390 pid=10391 auid=mitthu uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=pts7 ses=7962 comm=cp exe=/bin/cp key=icase 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.311:692) : proctitle=cp -a /mercury/research/caseaware/tmp/root /mercury/research/caseaware/tmp/ROOT /mercury/research/casefolding/tmp/ 
+type=PATH msg=audit(07/07/2021 14:54:51.311:692) : item=1 name=/mercury/research/casefolding/tmp/ROOT inode=666 dev=00:39 mode=fifo,700 ouid=root ogid=root rdev=00:00 nametype=CREATE cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=PATH msg=audit(07/07/2021 14:54:51.311:692) : item=0 name=/mercury/research/casefolding/tmp/ inode=642 dev=00:39 mode=dir,775 ouid=mitthu ogid=mitthu rdev=00:00 nametype=PARENT cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=CWD msg=audit(07/07/2021 14:54:51.311:692) : cwd=/mercury/research/casefolding/name-confusion 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.311:692) : arch=x86_64 syscall=mknod success=yes exit=0 a0=0x55b48b946da0 a1=fifo,700 a2=0x0 a3=0x55b48b944010 items=2 ppid=10390 pid=10391 auid=mitthu uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=pts7 ses=7962 comm=cp exe=/bin/cp key=icase 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.311:693) : proctitle=cp -a /mercury/research/caseaware/tmp/root /mercury/research/caseaware/tmp/ROOT /mercury/research/casefolding/tmp/ 
+type=PATH msg=audit(07/07/2021 14:54:51.311:693) : item=0 name=/mercury/research/casefolding/tmp/ROOT inode=666 dev=00:39 mode=fifo,700 ouid=root ogid=root rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=CWD msg=audit(07/07/2021 14:54:51.311:693) : cwd=/mercury/research/casefolding/name-confusion 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.311:693) : arch=x86_64 syscall=lchown success=yes exit=0 a0=0x55b48b946da0 a1=0x3e8 a2=0x3e8 a3=0x0 items=1 ppid=10390 pid=10391 auid=mitthu uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=pts7 ses=7962 comm=cp exe=/bin/cp key=icase 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.311:694) : proctitle=cp -a /mercury/research/caseaware/tmp/root /mercury/research/caseaware/tmp/ROOT /mercury/research/casefolding/tmp/ 
+type=PATH msg=audit(07/07/2021 14:54:51.311:694) : item=0 name=/mercury/research/casefolding/tmp/ROOT inode=666 dev=00:39 mode=fifo,700 ouid=mitthu ogid=mitthu rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=CWD msg=audit(07/07/2021 14:54:51.311:694) : cwd=/mercury/research/casefolding/name-confusion 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.311:694) : arch=x86_64 syscall=setxattr success=no exit=EOPNOTSUPP(Operation not supported) a0=0x55b48b946da0 a1=0x7f18457e8b5f a2=0x55b48b947030 a3=0x1c items=1 ppid=10390 pid=10391 auid=mitthu uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=pts7 ses=7962 comm=cp exe=/bin/cp key=icase 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.311:695) : proctitle=cp -a /mercury/research/caseaware/tmp/root /mercury/research/caseaware/tmp/ROOT /mercury/research/casefolding/tmp/ 
+type=PATH msg=audit(07/07/2021 14:54:51.311:695) : item=0 name=/mercury/research/casefolding/tmp/ROOT inode=666 dev=00:39 mode=fifo,700 ouid=mitthu ogid=mitthu rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=CWD msg=audit(07/07/2021 14:54:51.311:695) : cwd=/mercury/research/casefolding/name-confusion 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.311:695) : arch=x86_64 syscall=chmod success=yes exit=0 a0=0x55b48b946da0 a1=0777 a2=0x11ff a3=0x1c items=1 ppid=10390 pid=10391 auid=mitthu uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=pts7 ses=7962 comm=cp exe=/bin/cp key=icase 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.347:701) : proctitle=cp -a /mercury/research/caseaware/tmp/root /mercury/research/caseaware/tmp/ROOT /mercury/research/casefolding/tmp/ 
+type=PATH msg=audit(07/07/2021 14:54:51.347:701) : item=0 name=/mercury/research/casefolding/tmp/root inode=666 dev=00:39 mode=fifo,777 ouid=mitthu ogid=mitthu rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=CWD msg=audit(07/07/2021 14:54:51.347:701) : cwd=/mercury/research/casefolding/name-confusion 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.347:701) : arch=x86_64 syscall=openat success=yes exit=4 a0=0xffffff9c a1=0x5638fffe3da0 a2=O_WRONLY|O_TRUNC a3=0x0 items=1 ppid=10395 pid=10396 auid=mitthu uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=pts7 ses=7962 comm=cp exe=/bin/cp key=icase 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.315:702) : proctitle=cat /mercury/research/casefolding/tmp/root 
+type=PATH msg=audit(07/07/2021 14:54:51.315:702) : item=0 name=/mercury/research/casefolding/tmp/root inode=666 dev=00:39 mode=fifo,777 ouid=mitthu ogid=mitthu rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=CWD msg=audit(07/07/2021 14:54:51.315:702) : cwd=/mercury/research/casefolding/name-confusion 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.315:702) : arch=x86_64 syscall=openat success=yes exit=3 a0=0xffffff9c a1=0x7ffff91466fe a2=O_RDONLY a3=0x0 items=1 ppid=10377 pid=10394 auid=mitthu uid=mitthu gid=mitthu euid=mitthu suid=mitthu fsuid=mitthu egid=mitthu sgid=mitthu fsgid=mitthu tty=pts7 ses=7962 comm=cat exe=/bin/cat key=icase 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.347:703) : proctitle=cp -a /mercury/research/caseaware/tmp/root /mercury/research/caseaware/tmp/ROOT /mercury/research/casefolding/tmp/ 
+type=PATH msg=audit(07/07/2021 14:54:51.347:703) : item=0 name=(null) inode=666 dev=00:39 mode=fifo,777 ouid=mitthu ogid=mitthu rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.347:703) : arch=x86_64 syscall=fsetxattr success=no exit=EOPNOTSUPP(Operation not supported) a0=0x4 a1=0x7f685e760b5f a2=0x5638fffe3f40 a3=0x1c items=1 ppid=10395 pid=10396 auid=mitthu uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=pts7 ses=7962 comm=cp exe=/bin/cp key=icase 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.351:704) : proctitle=cp -a /mercury/research/caseaware/tmp/root /mercury/research/caseaware/tmp/ROOT /mercury/research/casefolding/tmp/ 
+type=PATH msg=audit(07/07/2021 14:54:51.351:704) : item=0 name=(null) inode=666 dev=00:39 mode=fifo,777 ouid=mitthu ogid=mitthu rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.351:704) : arch=x86_64 syscall=fchmod success=yes exit=0 a0=0x4 a1=0700 a2=0x1c0 a3=0x9 items=1 ppid=10395 pid=10396 auid=mitthu uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=pts7 ses=7962 comm=cp exe=/bin/cp key=icase 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.351:705) : proctitle=cp -a /mercury/research/caseaware/tmp/root /mercury/research/caseaware/tmp/ROOT /mercury/research/casefolding/tmp/ 
+type=PATH msg=audit(07/07/2021 14:54:51.351:705) : item=0 name=(null) inode=666 dev=00:39 mode=fifo,700 ouid=mitthu ogid=mitthu rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.351:705) : arch=x86_64 syscall=fchown success=yes exit=0 a0=0x4 a1=0x0 a2=0x0 a3=0x9 items=1 ppid=10395 pid=10396 auid=mitthu uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=pts7 ses=7962 comm=cp exe=/bin/cp key=icase 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.351:706) : proctitle=cp -a /mercury/research/caseaware/tmp/root /mercury/research/caseaware/tmp/ROOT /mercury/research/casefolding/tmp/ 
+type=PATH msg=audit(07/07/2021 14:54:51.351:706) : item=0 name=(null) inode=666 dev=00:39 mode=fifo,700 ouid=root ogid=root rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.351:706) : arch=x86_64 syscall=fsetxattr success=no exit=EOPNOTSUPP(Operation not supported) a0=0x4 a1=0x7f685e760b5f a2=0x5638fffe3f40 a3=0x1c items=1 ppid=10395 pid=10396 auid=mitthu uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=pts7 ses=7962 comm=cp exe=/bin/cp key=icase 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.351:707) : proctitle=cp -a /mercury/research/caseaware/tmp/root /mercury/research/caseaware/tmp/ROOT /mercury/research/casefolding/tmp/ 
+type=PATH msg=audit(07/07/2021 14:54:51.351:707) : item=0 name=(null) inode=666 dev=00:39 mode=fifo,700 ouid=root ogid=root rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.351:707) : arch=x86_64 syscall=fchmod success=yes exit=0 a0=0x4 a1=0700 a2=0x81c0 a3=0x1c items=1 ppid=10395 pid=10396 auid=mitthu uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=pts7 ses=7962 comm=cp exe=/bin/cp key=icase 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.351:708) : proctitle=cp -a /mercury/research/caseaware/tmp/root /mercury/research/caseaware/tmp/ROOT /mercury/research/casefolding/tmp/ 
+type=PATH msg=audit(07/07/2021 14:54:51.351:708) : item=1 name=/mercury/research/casefolding/tmp/ROOT inode=666 dev=00:39 mode=fifo,700 ouid=root ogid=root rdev=00:00 nametype=DELETE cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=PATH msg=audit(07/07/2021 14:54:51.351:708) : item=0 name=/mercury/research/casefolding/tmp/ inode=642 dev=00:39 mode=dir,775 ouid=mitthu ogid=mitthu rdev=00:00 nametype=PARENT cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=CWD msg=audit(07/07/2021 14:54:51.351:708) : cwd=/mercury/research/casefolding/name-confusion 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.351:708) : arch=x86_64 syscall=unlink success=yes exit=0 a0=0x5638fffe3da0 a1=0x0 a2=0x1000 a3=0x5638fffe1010 items=2 ppid=10395 pid=10396 auid=mitthu uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=pts7 ses=7962 comm=cp exe=/bin/cp key=icase 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.351:709) : proctitle=cp -a /mercury/research/caseaware/tmp/root /mercury/research/caseaware/tmp/ROOT /mercury/research/casefolding/tmp/ 
+type=PATH msg=audit(07/07/2021 14:54:51.351:709) : item=1 name=/mercury/research/casefolding/tmp/ROOT inode=667 dev=00:39 mode=fifo,700 ouid=root ogid=root rdev=00:00 nametype=CREATE cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=PATH msg=audit(07/07/2021 14:54:51.351:709) : item=0 name=/mercury/research/casefolding/tmp/ inode=642 dev=00:39 mode=dir,775 ouid=mitthu ogid=mitthu rdev=00:00 nametype=PARENT cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=CWD msg=audit(07/07/2021 14:54:51.351:709) : cwd=/mercury/research/casefolding/name-confusion 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.351:709) : arch=x86_64 syscall=mknod success=yes exit=0 a0=0x5638fffe3da0 a1=fifo,700 a2=0x0 a3=0x5638fffe1010 items=2 ppid=10395 pid=10396 auid=mitthu uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=pts7 ses=7962 comm=cp exe=/bin/cp key=icase 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.351:710) : proctitle=cp -a /mercury/research/caseaware/tmp/root /mercury/research/caseaware/tmp/ROOT /mercury/research/casefolding/tmp/ 
+type=PATH msg=audit(07/07/2021 14:54:51.351:710) : item=0 name=/mercury/research/casefolding/tmp/ROOT inode=667 dev=00:39 mode=fifo,700 ouid=root ogid=root rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=CWD msg=audit(07/07/2021 14:54:51.351:710) : cwd=/mercury/research/casefolding/name-confusion 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.351:710) : arch=x86_64 syscall=lchown success=yes exit=0 a0=0x5638fffe3da0 a1=0x3e8 a2=0x3e8 a3=0x0 items=1 ppid=10395 pid=10396 auid=mitthu uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=pts7 ses=7962 comm=cp exe=/bin/cp key=icase 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.351:711) : proctitle=cp -a /mercury/research/caseaware/tmp/root /mercury/research/caseaware/tmp/ROOT /mercury/research/casefolding/tmp/ 
+type=PATH msg=audit(07/07/2021 14:54:51.351:711) : item=0 name=/mercury/research/casefolding/tmp/ROOT inode=667 dev=00:39 mode=fifo,700 ouid=mitthu ogid=mitthu rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=CWD msg=audit(07/07/2021 14:54:51.351:711) : cwd=/mercury/research/casefolding/name-confusion 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.351:711) : arch=x86_64 syscall=setxattr success=no exit=EOPNOTSUPP(Operation not supported) a0=0x5638fffe3da0 a1=0x7f685e760b5f a2=0x5638fffe4030 a3=0x1c items=1 ppid=10395 pid=10396 auid=mitthu uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=pts7 ses=7962 comm=cp exe=/bin/cp key=icase 
+----
+type=PROCTITLE msg=audit(07/07/2021 14:54:51.351:712) : proctitle=cp -a /mercury/research/caseaware/tmp/root /mercury/research/caseaware/tmp/ROOT /mercury/research/casefolding/tmp/ 
+type=PATH msg=audit(07/07/2021 14:54:51.351:712) : item=0 name=/mercury/research/casefolding/tmp/ROOT inode=667 dev=00:39 mode=fifo,700 ouid=mitthu ogid=mitthu rdev=00:00 nametype=NORMAL cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 
+type=CWD msg=audit(07/07/2021 14:54:51.351:712) : cwd=/mercury/research/casefolding/name-confusion 
+type=SYSCALL msg=audit(07/07/2021 14:54:51.351:712) : arch=x86_64 syscall=chmod success=yes exit=0 a0=0x5638fffe3da0 a1=0777 a2=0x11ff a3=0x1c items=1 ppid=10395 pid=10396 auid=mitthu uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=pts7 ses=7962 comm=cp exe=/bin/cp key=icase 
+----
+type=CONFIG_CHANGE msg=audit(07/07/2021 14:54:51.415:723) : auid=mitthu ses=7962 op=remove_rule key=icase list=exit res=yes 
