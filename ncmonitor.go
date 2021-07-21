@@ -1,10 +1,12 @@
 package main
 
 import (
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os/exec"
 	"strings"
 )
 
@@ -12,10 +14,27 @@ import (
 const LogFile string = "examples/logs.auditd"
 const AuditdSep string = "----"
 
+var AuSyscalls map[string]string
+var Inodes map[string]Inode
+
+/* Holds parsed auditd records */
 type Record struct {
-	Type string
-	Msg  string
-	Body map[string]string
+	Type      string
+	Msg       string
+	Timestamp string
+	Body      map[string]string
+}
+
+/* Represents a path operation */
+type Inode struct {
+	Timestamp string
+	InodeNum  string
+	Device    string
+	Path      string
+	Operation string
+	Exe       string
+	Syscall   string
+	Proctitle string
 }
 
 func check(err error) {
@@ -24,13 +43,33 @@ func check(err error) {
 	}
 }
 
+func PopulateAuSyscalls() {
+	AuSyscalls = make(map[string]string)
+	out, err := exec.Command("ausyscall", "--dump").Output()
+	check(err)
+
+	output := string(out)
+	lines := strings.Split(output, "\n")
+	for _, line := range lines {
+		items := strings.Split(line, "\t")
+		if len(items) == 2 {
+			num, name := items[0], items[1]
+			AuSyscalls[num] = name
+		}
+	}
+	// fmt.Println(AuSyscalls)
+}
+
 func main() {
 	fmt.Println("Name confusion monitoring utility")
+	Inodes = make(map[string]Inode)
+	PopulateAuSyscalls()
 
 	rawLogs := ReadLog(LogFile)
 	// fmt.Println(rawLogs)
 
 	ParseLog(rawLogs)
+	// fmt.Println(Inodes)
 }
 
 func ReadLog(file string) string {
@@ -47,7 +86,8 @@ func ParseLog(rawLogs string) {
 
 	for _, line := range lines {
 		if line == AuditdSep {
-			ProcessRecord(recordLines)
+			r := ParseRecords(recordLines)
+			ProcessRecords(r)
 			recordLines = nil
 		} else {
 			recordLines = append(recordLines, line)
@@ -140,21 +180,110 @@ func (r *Record) CreateRecord(rawstr string) {
 	r.Body = body
 }
 
-func ProcessRecord(recordLines []string) {
+func ParseRecords(recordLines []string) *[]Record {
 	if len(recordLines) == 0 {
-		return
+		return nil
 	}
 
-	var r Record
-	// var timestamp string
+	var timestamp string
+	var records []Record
 
-	// Parse all records
 	for _, record := range recordLines {
 		if strings.Contains(record, "time->") {
-			// timestamp = record[6:]
+			timestamp = record[6:]
 			continue
 		}
+		var r Record
 		r.CreateRecord(record)
-		fmt.Println(r)
+		r.Timestamp = timestamp
+		records = append(records, r)
 	}
+
+	return &records
+}
+
+func (i *Inode) Initialize(syscall, proctitle, path Record) {
+	decodeProctitle := func(hexstr string) string {
+		decoded, err := hex.DecodeString(hexstr)
+		check(err)
+		return string(decoded)
+	}
+
+	i.Timestamp = path.Timestamp
+	i.InodeNum = path.Body["inode"]
+	i.Device = path.Body["dev"]
+	i.Path = path.Body["name"]
+	i.Operation = path.Body["nametype"]
+	i.Exe = syscall.Body["exe"]
+	i.Syscall = syscall.Body["syscall"]
+	i.Proctitle = proctitle.Body["proctitle"]
+
+	i.Syscall = AuSyscalls[i.Syscall]
+	i.Proctitle = decodeProctitle(i.Proctitle)
+}
+
+func (i Inode) Name() string {
+	name := i.Device + "|" + i.InodeNum
+	return name
+}
+
+func (i *Inode) Process() {
+	name := i.Name()
+	verifyUse := func() {
+		if i.Path == "(null)" {
+			/* syscall operates on inode# */
+			return
+		}
+
+		if old, ok := Inodes[name]; ok {
+			if old.Path != i.Path {
+				fmt.Printf("Bad use(%v on %v)=%v create(%v on %v)=%v\n",
+					i.Exe, i.Syscall, i.Path,
+					old.Exe, old.Syscall, old.Path)
+			}
+		}
+	}
+
+	switch i.Operation {
+	case "CREATE":
+		Inodes[name] = *i
+	case "PARENT":
+		fallthrough
+	case "NORMAL":
+		verifyUse()
+	case "DELETE":
+		delete(Inodes, name)
+	default:
+		/* code */
+		log.Fatal("Unhandled PATH operation: ", i.Operation)
+	}
+}
+
+func ProcessRecords(rs *[]Record) {
+	if rs == nil {
+		return
+	}
+	// fmt.Println(rs)
+
+	// Extract syscalls & proctitle
+	var syscall, proctitle Record
+	for _, r := range *rs {
+		switch r.Type {
+		case "SYSCALL":
+			syscall = r
+		case "PROCTITLE":
+			proctitle = r
+		}
+	}
+
+	// Extract inodes
+	for _, r := range *rs {
+		if r.Type == "PATH" {
+			var i Inode
+			i.Initialize(syscall, proctitle, r)
+			i.Process()
+			// fmt.Println(i)
+		}
+	}
+	// fmt.Println(syscall, proctitle)
 }
