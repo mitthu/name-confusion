@@ -45,9 +45,12 @@ func check(err error) {
 }
 
 func PopulateAuSyscalls() {
-	AuSyscalls = make(map[string]string)
 	out, err := exec.Command("ausyscall", "--dump").Output()
-	check(err)
+	if err != nil {
+		return
+	}
+
+	AuSyscalls = make(map[string]string)
 
 	output := string(out)
 	lines := strings.Split(output, "\n")
@@ -66,12 +69,14 @@ func main() {
 	Inodes = make(map[string]Inode)
 	PopulateAuSyscalls()
 
+	/* parse cmdline args */
 	logfile := LogFile
 	args := os.Args
 	if len(args) >= 2 {
 		logfile = args[1]
 	}
 
+	/* read & parse the logs */
 	rawLogs := ReadLog(logfile)
 	// fmt.Println(rawLogs)
 
@@ -225,8 +230,10 @@ func (i *Inode) Initialize(syscall, proctitle, path Record) {
 	i.Syscall = syscall.Body["syscall"]
 	i.Proctitle = proctitle.Body["proctitle"]
 
-	i.Syscall = AuSyscalls[i.Syscall]
 	i.Proctitle = decodeProctitle(i.Proctitle)
+	if AuSyscalls != nil {
+		i.Syscall = AuSyscalls[i.Syscall]
+	}
 }
 
 func (i Inode) Name() string {
