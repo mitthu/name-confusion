@@ -12,7 +12,7 @@ import (
 )
 
 // Globals
-const LogFile string = "examples/logs.auditd"
+const LogFile string = "examples/logs-1.auditd"
 const AuditdSep string = "----"
 
 var AuSyscalls map[string]string

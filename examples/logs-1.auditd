@@ -1,0 +1,142 @@
+----
+time->Wed Jul 21 11:52:35 2021
+type=CONFIG_CHANGE msg=audit(1626882755.114:10939): auid=1000 ses=1469 op=add_rule key="icase" list=4 res=1
+----
+time->Wed Jul 21 11:52:35 2021
+type=PROCTITLE msg=audit(1626882755.114:10942): proctitle=2F62696E2F62617368002E2F6E632D7363656E6172696F732E7368
+type=PATH msg=audit(1626882755.114:10942): item=2 name="/lib64/ld-linux-x86-64.so.2" inode=3407921 dev=08:03 mode=0100755 ouid=0 ogid=0 rdev=00:00 nametype=NORMAL cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=PATH msg=audit(1626882755.114:10942): item=1 name="/bin/bash" inode=1572892 dev=08:03 mode=0100755 ouid=0 ogid=0 rdev=00:00 nametype=NORMAL cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=PATH msg=audit(1626882755.114:10942): item=0 name="./nc-scenarios.sh" inode=2377 dev=00:39 mode=0100755 ouid=1000 ogid=1000 rdev=00:00 nametype=NORMAL cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=CWD msg=audit(1626882755.114:10942): cwd="/mercury/research/casefolding/name-confusion"
+type=EXECVE msg=audit(1626882755.114:10942): argc=2 a0="/bin/bash" a1="./nc-scenarios.sh"
+type=SYSCALL msg=audit(1626882755.114:10942): arch=c000003e syscall=59 success=yes exit=0 a0=5649a2461540 a1=5649a23c69a0 a2=5649a22f10d0 a3=8 items=3 ppid=9977 pid=21410 auid=1000 uid=1000 gid=1000 euid=1000 suid=1000 fsuid=1000 egid=1000 sgid=1000 fsgid=1000 tty=pts2 ses=1469 comm="nc-scenarios.sh" exe="/bin/bash" key="icase"
+----
+time->Wed Jul 21 11:52:35 2021
+type=PROCTITLE msg=audit(1626882755.114:10943): proctitle=2F62696E2F62617368002E2F6E632D7363656E6172696F732E7368
+type=PATH msg=audit(1626882755.114:10943): item=0 name="./nc-scenarios.sh" inode=2377 dev=00:39 mode=0100755 ouid=1000 ogid=1000 rdev=00:00 nametype=NORMAL cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=CWD msg=audit(1626882755.114:10943): cwd="/mercury/research/casefolding/name-confusion"
+type=SYSCALL msg=audit(1626882755.114:10943): arch=c000003e syscall=257 success=yes exit=3 a0=ffffff9c a1=5555abe37330 a2=0 a3=0 items=1 ppid=9977 pid=21410 auid=1000 uid=1000 gid=1000 euid=1000 suid=1000 fsuid=1000 egid=1000 sgid=1000 fsgid=1000 tty=pts2 ses=1469 comm="nc-scenarios.sh" exe="/bin/bash" key="icase"
+----
+time->Wed Jul 21 11:52:35 2021
+type=PROCTITLE msg=audit(1626882755.118:10944): proctitle=2F62696E2F62617368002E2F6E632D7363656E6172696F732E7368
+type=PATH msg=audit(1626882755.118:10944): item=0 name="/mercury/research/casefolding/tmp/" inode=642 dev=00:39 mode=040775 ouid=1000 ogid=1000 rdev=00:00 nametype=NORMAL cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=CWD msg=audit(1626882755.118:10944): cwd="/mercury/research/casefolding/name-confusion"
+type=SYSCALL msg=audit(1626882755.118:10944): arch=c000003e syscall=257 success=yes exit=3 a0=ffffff9c a1=5555abe59f30 a2=90800 a3=0 items=1 ppid=9977 pid=21410 auid=1000 uid=1000 gid=1000 euid=1000 suid=1000 fsuid=1000 egid=1000 sgid=1000 fsgid=1000 tty=pts2 ses=1469 comm="nc-scenarios.sh" exe="/bin/bash" key="icase"
+----
+time->Wed Jul 21 11:52:35 2021
+type=PROCTITLE msg=audit(1626882755.118:10945): proctitle=726D002D66002F6D6572637572792F72657365617263682F63617365666F6C64696E672F746D702F2A002F6D6572637572792F72657365617263682F6361736561776172652F746D702F2A
+type=PATH msg=audit(1626882755.118:10945): item=0 name="/mercury/research/casefolding/tmp/" inode=642 dev=00:39 mode=040775 ouid=1000 ogid=1000 rdev=00:00 nametype=PARENT cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=CWD msg=audit(1626882755.118:10945): cwd="/mercury/research/casefolding/name-confusion"
+type=SYSCALL msg=audit(1626882755.118:10945): arch=c000003e syscall=263 success=no exit=-2 a0=ffffff9c a1=56487621f490 a2=0 a3=56487621e010 items=1 ppid=21410 pid=21411 auid=1000 uid=1000 gid=1000 euid=1000 suid=1000 fsuid=1000 egid=1000 sgid=1000 fsgid=1000 tty=pts2 ses=1469 comm="rm" exe="/bin/rm" key="icase"
+----
+time->Wed Jul 21 11:52:35 2021
+type=PROCTITLE msg=audit(1626882755.118:10946): proctitle=746F756368002F6D6572637572792F72657365617263682F63617365666F6C64696E672F746D702F746D7066696C65
+type=PATH msg=audit(1626882755.118:10946): item=1 name="/mercury/research/casefolding/tmp/tmpfile" inode=2103 dev=00:39 mode=0100664 ouid=1000 ogid=1000 rdev=00:00 nametype=CREATE cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=PATH msg=audit(1626882755.118:10946): item=0 name="/mercury/research/casefolding/tmp/" inode=642 dev=00:39 mode=040775 ouid=1000 ogid=1000 rdev=00:00 nametype=PARENT cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=CWD msg=audit(1626882755.118:10946): cwd="/mercury/research/casefolding/name-confusion"
+type=SYSCALL msg=audit(1626882755.118:10946): arch=c000003e syscall=257 success=yes exit=3 a0=ffffff9c a1=7ffcc56115f9 a2=941 a3=1b6 items=2 ppid=21410 pid=21412 auid=1000 uid=1000 gid=1000 euid=1000 suid=1000 fsuid=1000 egid=1000 sgid=1000 fsgid=1000 tty=pts2 ses=1469 comm="touch" exe="/bin/touch" key="icase"
+----
+time->Wed Jul 21 11:52:35 2021
+type=PROCTITLE msg=audit(1626882755.122:10947): proctitle=746F756368002F6D6572637572792F72657365617263682F63617365666F6C64696E672F746D702F544D5046494C45
+type=PATH msg=audit(1626882755.122:10947): item=1 name="/mercury/research/casefolding/tmp/TMPFILE" inode=2103 dev=00:39 mode=0100664 ouid=1000 ogid=1000 rdev=00:00 nametype=NORMAL cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=PATH msg=audit(1626882755.122:10947): item=0 name="/mercury/research/casefolding/tmp/" inode=642 dev=00:39 mode=040775 ouid=1000 ogid=1000 rdev=00:00 nametype=PARENT cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=CWD msg=audit(1626882755.122:10947): cwd="/mercury/research/casefolding/name-confusion"
+type=SYSCALL msg=audit(1626882755.122:10947): arch=c000003e syscall=257 success=yes exit=3 a0=ffffff9c a1=7ffe2c1675f9 a2=941 a3=1b6 items=2 ppid=21410 pid=21414 auid=1000 uid=1000 gid=1000 euid=1000 suid=1000 fsuid=1000 egid=1000 sgid=1000 fsgid=1000 tty=pts2 ses=1469 comm="touch" exe="/bin/touch" key="icase"
+----
+time->Wed Jul 21 11:52:35 2021
+type=PROCTITLE msg=audit(1626882755.126:10948): proctitle=726D002F6D6572637572792F72657365617263682F63617365666F6C64696E672F746D702F746D7066696C65
+type=PATH msg=audit(1626882755.126:10948): item=1 name="/mercury/research/casefolding/tmp/tmpfile" inode=2103 dev=00:39 mode=0100664 ouid=1000 ogid=1000 rdev=00:00 nametype=DELETE cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=PATH msg=audit(1626882755.126:10948): item=0 name="/mercury/research/casefolding/tmp/" inode=642 dev=00:39 mode=040775 ouid=1000 ogid=1000 rdev=00:00 nametype=PARENT cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=CWD msg=audit(1626882755.126:10948): cwd="/mercury/research/casefolding/name-confusion"
+type=SYSCALL msg=audit(1626882755.126:10948): arch=c000003e syscall=263 success=yes exit=0 a0=ffffff9c a1=555c9ccf6490 a2=0 a3=100 items=2 ppid=21410 pid=21416 auid=1000 uid=1000 gid=1000 euid=1000 suid=1000 fsuid=1000 egid=1000 sgid=1000 fsgid=1000 tty=pts2 ses=1469 comm="rm" exe="/bin/rm" key="icase"
+----
+time->Wed Jul 21 11:52:35 2021
+type=PROCTITLE msg=audit(1626882755.146:10957): proctitle=6370002D61002F6D6572637572792F72657365617263682F6361736561776172652F746D702F726F6F74002F6D6572637572792F72657365617263682F6361736561776172652F746D702F524F4F54002F6D6572637572792F72657365617263682F63617365666F6C64696E672F746D702F
+type=PATH msg=audit(1626882755.146:10957): item=1 name="/mercury/research/casefolding/tmp/root" inode=2389 dev=00:39 mode=0100700 ouid=0 ogid=0 rdev=00:00 nametype=CREATE cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=PATH msg=audit(1626882755.146:10957): item=0 name="/mercury/research/casefolding/tmp/" inode=642 dev=00:39 mode=040775 ouid=1000 ogid=1000 rdev=00:00 nametype=PARENT cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=CWD msg=audit(1626882755.146:10957): cwd="/mercury/research/casefolding/name-confusion"
+type=SYSCALL msg=audit(1626882755.146:10957): arch=c000003e syscall=257 success=yes exit=4 a0=ffffff9c a1=5596ef3b7da0 a2=c1 a3=1c0 items=2 ppid=21421 pid=21422 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts2 ses=1469 comm="cp" exe="/bin/cp" key="icase"
+----
+time->Wed Jul 21 11:52:35 2021
+type=PROCTITLE msg=audit(1626882755.146:10958): proctitle=6370002D61002F6D6572637572792F72657365617263682F6361736561776172652F746D702F726F6F74002F6D6572637572792F72657365617263682F6361736561776172652F746D702F524F4F54002F6D6572637572792F72657365617263682F63617365666F6C64696E672F746D702F
+type=PATH msg=audit(1626882755.146:10958): item=0 name=(null) inode=2389 dev=00:39 mode=0100700 ouid=0 ogid=0 rdev=00:00 nametype=NORMAL cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=SYSCALL msg=audit(1626882755.146:10958): arch=c000003e syscall=190 success=no exit=-95 a0=4 a1=7fa0ca1cbb5f a2=5596ef3b7f40 a3=1c items=1 ppid=21421 pid=21422 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts2 ses=1469 comm="cp" exe="/bin/cp" key="icase"
+----
+time->Wed Jul 21 11:52:35 2021
+type=PROCTITLE msg=audit(1626882755.146:10959): proctitle=6370002D61002F6D6572637572792F72657365617263682F6361736561776172652F746D702F726F6F74002F6D6572637572792F72657365617263682F6361736561776172652F746D702F524F4F54002F6D6572637572792F72657365617263682F63617365666F6C64696E672F746D702F
+type=PATH msg=audit(1626882755.146:10959): item=0 name=(null) inode=2389 dev=00:39 mode=0100700 ouid=0 ogid=0 rdev=00:00 nametype=NORMAL cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=SYSCALL msg=audit(1626882755.146:10959): arch=c000003e syscall=91 success=yes exit=0 a0=4 a1=81c0 a2=81c0 a3=9 items=1 ppid=21421 pid=21422 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts2 ses=1469 comm="cp" exe="/bin/cp" key="icase"
+----
+time->Wed Jul 21 11:52:35 2021
+type=PROCTITLE msg=audit(1626882755.146:10960): proctitle=6370002D61002F6D6572637572792F72657365617263682F6361736561776172652F746D702F726F6F74002F6D6572637572792F72657365617263682F6361736561776172652F746D702F524F4F54002F6D6572637572792F72657365617263682F63617365666F6C64696E672F746D702F
+type=PATH msg=audit(1626882755.146:10960): item=0 name="/mercury/research/casefolding/tmp/ROOT" inode=2389 dev=00:39 mode=0100700 ouid=0 ogid=0 rdev=00:00 nametype=NORMAL cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=CWD msg=audit(1626882755.146:10960): cwd="/mercury/research/casefolding/name-confusion"
+type=SYSCALL msg=audit(1626882755.146:10960): arch=c000003e syscall=257 success=yes exit=4 a0=ffffff9c a1=5596ef3b7da0 a2=201 a3=0 items=1 ppid=21421 pid=21422 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts2 ses=1469 comm="cp" exe="/bin/cp" key="icase"
+----
+time->Wed Jul 21 11:52:35 2021
+type=PROCTITLE msg=audit(1626882755.146:10961): proctitle=6370002D61002F6D6572637572792F72657365617263682F6361736561776172652F746D702F726F6F74002F6D6572637572792F72657365617263682F6361736561776172652F746D702F524F4F54002F6D6572637572792F72657365617263682F63617365666F6C64696E672F746D702F
+type=PATH msg=audit(1626882755.146:10961): item=0 name=(null) inode=2389 dev=00:39 mode=0100700 ouid=0 ogid=0 rdev=00:00 nametype=NORMAL cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=SYSCALL msg=audit(1626882755.146:10961): arch=c000003e syscall=190 success=no exit=-95 a0=4 a1=7fa0ca1cbb5f a2=5596ef3d8ff0 a3=1c items=1 ppid=21421 pid=21422 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts2 ses=1469 comm="cp" exe="/bin/cp" key="icase"
+----
+time->Wed Jul 21 11:52:35 2021
+type=PROCTITLE msg=audit(1626882755.146:10962): proctitle=6370002D61002F6D6572637572792F72657365617263682F6361736561776172652F746D702F726F6F74002F6D6572637572792F72657365617263682F6361736561776172652F746D702F524F4F54002F6D6572637572792F72657365617263682F63617365666F6C64696E672F746D702F
+type=PATH msg=audit(1626882755.146:10962): item=0 name=(null) inode=2389 dev=00:39 mode=0100700 ouid=0 ogid=0 rdev=00:00 nametype=NORMAL cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=SYSCALL msg=audit(1626882755.146:10962): arch=c000003e syscall=91 success=yes exit=0 a0=4 a1=1c0 a2=1c0 a3=1c items=1 ppid=21421 pid=21422 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts2 ses=1469 comm="cp" exe="/bin/cp" key="icase"
+----
+time->Wed Jul 21 11:52:35 2021
+type=PROCTITLE msg=audit(1626882755.146:10963): proctitle=6370002D61002F6D6572637572792F72657365617263682F6361736561776172652F746D702F726F6F74002F6D6572637572792F72657365617263682F6361736561776172652F746D702F524F4F54002F6D6572637572792F72657365617263682F63617365666F6C64696E672F746D702F
+type=PATH msg=audit(1626882755.146:10963): item=0 name=(null) inode=2389 dev=00:39 mode=0100700 ouid=0 ogid=0 rdev=00:00 nametype=NORMAL cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=SYSCALL msg=audit(1626882755.146:10963): arch=c000003e syscall=93 success=yes exit=0 a0=4 a1=3e8 a2=3e8 a3=1c items=1 ppid=21421 pid=21422 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts2 ses=1469 comm="cp" exe="/bin/cp" key="icase"
+----
+time->Wed Jul 21 11:52:35 2021
+type=PROCTITLE msg=audit(1626882755.146:10964): proctitle=6370002D61002F6D6572637572792F72657365617263682F6361736561776172652F746D702F726F6F74002F6D6572637572792F72657365617263682F6361736561776172652F746D702F524F4F54002F6D6572637572792F72657365617263682F63617365666F6C64696E672F746D702F
+type=PATH msg=audit(1626882755.146:10964): item=0 name=(null) inode=2389 dev=00:39 mode=0100700 ouid=1000 ogid=1000 rdev=00:00 nametype=NORMAL cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=SYSCALL msg=audit(1626882755.146:10964): arch=c000003e syscall=190 success=no exit=-95 a0=4 a1=7fa0ca1cbb5f a2=5596ef3d8ff0 a3=1c items=1 ppid=21421 pid=21422 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts2 ses=1469 comm="cp" exe="/bin/cp" key="icase"
+----
+time->Wed Jul 21 11:52:35 2021
+type=PROCTITLE msg=audit(1626882755.146:10965): proctitle=6370002D61002F6D6572637572792F72657365617263682F6361736561776172652F746D702F726F6F74002F6D6572637572792F72657365617263682F6361736561776172652F746D702F524F4F54002F6D6572637572792F72657365617263682F63617365666F6C64696E672F746D702F
+type=PATH msg=audit(1626882755.146:10965): item=0 name=(null) inode=2389 dev=00:39 mode=0100700 ouid=1000 ogid=1000 rdev=00:00 nametype=NORMAL cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=SYSCALL msg=audit(1626882755.146:10965): arch=c000003e syscall=91 success=yes exit=0 a0=4 a1=81ff a2=81ff a3=1c items=1 ppid=21421 pid=21422 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts2 ses=1469 comm="cp" exe="/bin/cp" key="icase"
+----
+time->Wed Jul 21 11:52:35 2021
+type=PROCTITLE msg=audit(1626882755.162:10973): proctitle=2F62696E2F62617368002E2F6E632D7363656E6172696F732E7368
+type=PATH msg=audit(1626882755.162:10973): item=0 name="/mercury/research/casefolding/tmp/" inode=642 dev=00:39 mode=040775 ouid=1000 ogid=1000 rdev=00:00 nametype=NORMAL cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=CWD msg=audit(1626882755.162:10973): cwd="/mercury/research/casefolding/name-confusion"
+type=SYSCALL msg=audit(1626882755.162:10973): arch=c000003e syscall=257 success=yes exit=3 a0=ffffff9c a1=5555abe5bc60 a2=90800 a3=0 items=1 ppid=9977 pid=21410 auid=1000 uid=1000 gid=1000 euid=1000 suid=1000 fsuid=1000 egid=1000 sgid=1000 fsgid=1000 tty=pts2 ses=1469 comm="nc-scenarios.sh" exe="/bin/bash" key="icase"
+----
+time->Wed Jul 21 11:52:35 2021
+type=PROCTITLE msg=audit(1626882755.170:10977): proctitle=6370002D61002F6D6572637572792F72657365617263682F63617365666F6C64696E672F746D702F726F6F74002F6D6572637572792F72657365617263682F6361736561776172652F746D702F
+type=PATH msg=audit(1626882755.170:10977): item=0 name="/mercury/research/casefolding/tmp/root" inode=2389 dev=00:39 mode=0100777 ouid=1000 ogid=1000 rdev=00:00 nametype=NORMAL cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=CWD msg=audit(1626882755.170:10977): cwd="/mercury/research/casefolding/name-confusion"
+type=SYSCALL msg=audit(1626882755.170:10977): arch=c000003e syscall=257 success=yes exit=3 a0=ffffff9c a1=7ffe363d1836 a2=20000 a3=0 items=1 ppid=21426 pid=21427 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts2 ses=1469 comm="cp" exe="/bin/cp" key="icase"
+----
+time->Wed Jul 21 11:52:35 2021
+type=PROCTITLE msg=audit(1626882755.170:10978): proctitle=6370002D61002F6D6572637572792F72657365617263682F63617365666F6C64696E672F746D702F726F6F74002F6D6572637572792F72657365617263682F6361736561776172652F746D702F
+type=PATH msg=audit(1626882755.170:10978): item=0 name=(null) inode=2389 dev=00:39 mode=0100777 ouid=1000 ogid=1000 rdev=00:00 nametype=NORMAL cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=SYSCALL msg=audit(1626882755.170:10978): arch=c000003e syscall=196 success=yes exit=0 a0=3 a1=0 a2=0 a3=0 items=1 ppid=21426 pid=21427 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts2 ses=1469 comm="cp" exe="/bin/cp" key="icase"
+----
+time->Wed Jul 21 11:52:35 2021
+type=PROCTITLE msg=audit(1626882755.170:10979): proctitle=6370002D61002F6D6572637572792F72657365617263682F63617365666F6C64696E672F746D702F726F6F74002F6D6572637572792F72657365617263682F6361736561776172652F746D702F
+type=PATH msg=audit(1626882755.170:10979): item=0 name=(null) inode=2389 dev=00:39 mode=0100777 ouid=1000 ogid=1000 rdev=00:00 nametype=NORMAL cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=SYSCALL msg=audit(1626882755.170:10979): arch=c000003e syscall=196 success=yes exit=0 a0=3 a1=7ffe363cfb10 a2=0 a3=0 items=1 ppid=21426 pid=21427 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts2 ses=1469 comm="cp" exe="/bin/cp" key="icase"
+----
+time->Wed Jul 21 11:52:35 2021
+type=PROCTITLE msg=audit(1626882755.170:10980): proctitle=6370002D61002F6D6572637572792F72657365617263682F63617365666F6C64696E672F746D702F726F6F74002F6D6572637572792F72657365617263682F6361736561776172652F746D702F
+type=PATH msg=audit(1626882755.170:10980): item=0 name=(null) inode=2389 dev=00:39 mode=0100777 ouid=1000 ogid=1000 rdev=00:00 nametype=NORMAL cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=SYSCALL msg=audit(1626882755.170:10980): arch=c000003e syscall=193 success=no exit=-95 a0=3 a1=7f61783d6b5f a2=7ffe363cf9f0 a3=84 items=1 ppid=21426 pid=21427 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts2 ses=1469 comm="cp" exe="/bin/cp" key="icase"
+----
+time->Wed Jul 21 11:52:35 2021
+type=PROCTITLE msg=audit(1626882755.170:10983): proctitle=2F62696E2F62617368002E2F6E632D7363656E6172696F732E7368
+type=PATH msg=audit(1626882755.170:10983): item=0 name="/mercury/research/casefolding/tmp/" inode=642 dev=00:39 mode=040775 ouid=1000 ogid=1000 rdev=00:00 nametype=NORMAL cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=CWD msg=audit(1626882755.170:10983): cwd="/mercury/research/casefolding/name-confusion"
+type=SYSCALL msg=audit(1626882755.170:10983): arch=c000003e syscall=257 success=yes exit=3 a0=ffffff9c a1=5555abe4e770 a2=90800 a3=0 items=1 ppid=9977 pid=21410 auid=1000 uid=1000 gid=1000 euid=1000 suid=1000 fsuid=1000 egid=1000 sgid=1000 fsgid=1000 tty=pts2 ses=1469 comm="nc-scenarios.sh" exe="/bin/bash" key="icase"
+----
+time->Wed Jul 21 11:52:35 2021
+type=PROCTITLE msg=audit(1626882755.174:10984): proctitle=726D002D66002F6D6572637572792F72657365617263682F63617365666F6C64696E672F746D702F726F6F74002F6D6572637572792F72657365617263682F6361736561776172652F746D702F726F6F74
+type=PATH msg=audit(1626882755.174:10984): item=1 name="/mercury/research/casefolding/tmp/root" inode=2389 dev=00:39 mode=0100777 ouid=1000 ogid=1000 rdev=00:00 nametype=DELETE cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=PATH msg=audit(1626882755.174:10984): item=0 name="/mercury/research/casefolding/tmp/" inode=642 dev=00:39 mode=040775 ouid=1000 ogid=1000 rdev=00:00 nametype=PARENT cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=CWD msg=audit(1626882755.174:10984): cwd="/mercury/research/casefolding/name-confusion"
+type=SYSCALL msg=audit(1626882755.174:10984): arch=c000003e syscall=263 success=yes exit=0 a0=ffffff9c a1=5557fe9e6490 a2=0 a3=5557fe9e5010 items=2 ppid=21410 pid=21430 auid=1000 uid=1000 gid=1000 euid=1000 suid=1000 fsuid=1000 egid=1000 sgid=1000 fsgid=1000 tty=pts2 ses=1469 comm="rm" exe="/bin/rm" key="icase"
+----
+time->Wed Jul 21 11:52:35 2021
+type=CONFIG_CHANGE msg=audit(1626882755.182:10988): auid=1000 ses=1469 op=remove_rule key="icase" list=4 res=1
