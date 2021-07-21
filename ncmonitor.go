@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -65,7 +66,13 @@ func main() {
 	Inodes = make(map[string]Inode)
 	PopulateAuSyscalls()
 
-	rawLogs := ReadLog(LogFile)
+	logfile := LogFile
+	args := os.Args
+	if len(args) >= 2 {
+		logfile = args[1]
+	}
+
+	rawLogs := ReadLog(logfile)
 	// fmt.Println(rawLogs)
 
 	ParseLog(rawLogs)
