@@ -37,10 +37,11 @@ type Inode struct {
 	Proctitle string
 }
 
+/* Holds progressive FS operations */
 type InodeMap map[string]Inode
 
+/* Populated via PopulateAuSyscalls() */
 var AuSyscalls map[string]string
-var Inodes InodeMap
 
 func check(err error) {
 	if err != nil {
@@ -70,7 +71,6 @@ func PopulateAuSyscalls() {
 
 func main() {
 	fmt.Println("Name confusion monitoring utility")
-	Inodes = make(InodeMap)
 	PopulateAuSyscalls()
 
 	/* parse cmdline args */
@@ -91,6 +91,7 @@ func ParseLog(file string) {
 	contentStr := string(content)
 	lines := strings.Split(contentStr, "\n")
 
+	inodes := make(InodeMap) /* records of operations */
 	var recordLines []string
 	var rs Records
 	for _, line := range lines {
@@ -98,7 +99,7 @@ func ParseLog(file string) {
 			recordLines = append(recordLines, line)
 		} else {
 			rs.Initialize(recordLines)
-			rs.Process()
+			rs.Process(&inodes)
 			rs, recordLines = nil, nil
 		}
 	}
@@ -208,7 +209,7 @@ func (records *Records) Initialize(lines []string) {
 	}
 }
 
-func (rs Records) Process() {
+func (rs Records) Process(inodes *InodeMap) {
 	if rs == nil {
 		return
 	}
@@ -230,7 +231,7 @@ func (rs Records) Process() {
 		if r.Type == "PATH" {
 			var i Inode
 			i.Initialize(syscall, proctitle, r)
-			i.Process()
+			i.Process(inodes)
 			// fmt.Println(i)
 		}
 	}
@@ -264,7 +265,7 @@ func (i Inode) Name() string {
 	return name
 }
 
-func (i *Inode) Process() {
+func (i *Inode) Process(inodes *InodeMap) {
 	name := i.Name()
 	verifyUse := func() {
 		if i.Path == "(null)" {
@@ -272,7 +273,7 @@ func (i *Inode) Process() {
 			return
 		}
 
-		if old, ok := Inodes[name]; ok {
+		if old, ok := (*inodes)[name]; ok {
 			if old.Path != i.Path {
 				fmt.Printf("Bad use(%v on %v)=%v create(%v on %v)=%v\n",
 					i.Exe, i.Syscall, i.Path,
@@ -283,13 +284,13 @@ func (i *Inode) Process() {
 
 	switch i.Operation {
 	case "CREATE":
-		Inodes[name] = *i
+		(*inodes)[name] = *i
 	case "PARENT":
 		fallthrough
 	case "NORMAL":
 		verifyUse()
 	case "DELETE":
-		delete(Inodes, name)
+		delete(*inodes, name)
 	default:
 		/* code */
 		log.Fatal("Unhandled PATH operation: ", i.Operation)
