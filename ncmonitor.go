@@ -23,6 +23,8 @@ type Record struct {
 	Body      map[string]string
 }
 
+type Records []Record
+
 /* Represents a path operation */
 type Inode struct {
 	Timestamp string
@@ -90,13 +92,14 @@ func ParseLog(file string) {
 	lines := strings.Split(contentStr, "\n")
 
 	var recordLines []string
+	var rs Records
 	for _, line := range lines {
-		if line == AuditdSep {
-			r := ParseRecords(recordLines)
-			ProcessRecords(r)
-			recordLines = nil
-		} else {
+		if line != AuditdSep {
 			recordLines = append(recordLines, line)
+		} else {
+			rs.Initialize(recordLines)
+			rs.Process()
+			rs, recordLines = nil, nil
 		}
 	}
 }
@@ -186,15 +189,14 @@ func (r *Record) CreateRecord(rawstr string) {
 	r.Body = body
 }
 
-func ParseRecords(recordLines []string) *[]Record {
-	if len(recordLines) == 0 {
-		return nil
+func (records *Records) Initialize(lines []string) {
+	if len(lines) == 0 {
+		return
 	}
 
 	var timestamp string
-	var records []Record
 
-	for _, record := range recordLines {
+	for _, record := range lines {
 		if strings.Contains(record, "time->") {
 			timestamp = record[6:]
 			continue
@@ -202,10 +204,37 @@ func ParseRecords(recordLines []string) *[]Record {
 		var r Record
 		r.CreateRecord(record)
 		r.Timestamp = timestamp
-		records = append(records, r)
+		*records = append(*records, r)
+	}
+}
+
+func (rs Records) Process() {
+	if rs == nil {
+		return
+	}
+	// fmt.Println(rs)
+
+	// Extract syscalls & proctitle
+	var syscall, proctitle Record
+	for _, r := range rs {
+		switch r.Type {
+		case "SYSCALL":
+			syscall = r
+		case "PROCTITLE":
+			proctitle = r
+		}
 	}
 
-	return &records
+	// Extract inodes
+	for _, r := range rs {
+		if r.Type == "PATH" {
+			var i Inode
+			i.Initialize(syscall, proctitle, r)
+			i.Process()
+			// fmt.Println(i)
+		}
+	}
+	// fmt.Println(syscall, proctitle)
 }
 
 func (i *Inode) Initialize(syscall, proctitle, path Record) {
@@ -265,33 +294,4 @@ func (i *Inode) Process() {
 		/* code */
 		log.Fatal("Unhandled PATH operation: ", i.Operation)
 	}
-}
-
-func ProcessRecords(rs *[]Record) {
-	if rs == nil {
-		return
-	}
-	// fmt.Println(rs)
-
-	// Extract syscalls & proctitle
-	var syscall, proctitle Record
-	for _, r := range *rs {
-		switch r.Type {
-		case "SYSCALL":
-			syscall = r
-		case "PROCTITLE":
-			proctitle = r
-		}
-	}
-
-	// Extract inodes
-	for _, r := range *rs {
-		if r.Type == "PATH" {
-			var i Inode
-			i.Initialize(syscall, proctitle, r)
-			i.Process()
-			// fmt.Println(i)
-		}
-	}
-	// fmt.Println(syscall, proctitle)
 }
