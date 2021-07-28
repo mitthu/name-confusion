@@ -1,3 +1,19 @@
+/*
+Find case consistencies from auditd logs
+
+We extract bad create-use pairs from the auditd logs.
+
+From auditd logs, we create a Record. Related records are bundled into Records.
+Next we generate Inodes from Records. Finally, the Inodes are applied against a
+Timeline. The Timeline prints out violations as the Inodes are being applied.
+
+To summarize:
+	- Create Record
+	- Add Record to Records
+	- Generate Inodes from Records
+	- Apply Inodes against a Timeline
+
+*/
 package main
 
 import (
@@ -11,34 +27,11 @@ import (
 	"strings"
 )
 
-// Globals
+// Example file to parse when no input is given
 const LogFile string = "examples/logs-1.auditd"
+
+// Event separator in auditd logs
 const AuditdSep string = "----"
-
-/* Holds parsed auditd records */
-type Record struct {
-	Type      string
-	Msg       string
-	Timestamp string
-	Body      map[string]string
-}
-
-type Records []Record
-
-/* Represents a path operation */
-type Inode struct {
-	Timestamp string
-	InodeNum  string
-	Device    string
-	Path      string
-	Operation string
-	Exe       string
-	Syscall   string
-	Proctitle string
-}
-
-/* Holds progressive FS operations */
-type InodeMap map[string]Inode
 
 /* Populated via PopulateAuSyscalls() */
 var AuSyscalls map[string]string
@@ -84,6 +77,7 @@ func main() {
 	ParseLog(logfile)
 }
 
+// Shim to put it together
 func ParseLog(file string) {
 	content, err := ioutil.ReadFile(file)
 	check(err)
@@ -91,21 +85,22 @@ func ParseLog(file string) {
 	contentStr := string(content)
 	lines := strings.Split(contentStr, "\n")
 
-	inodes := make(InodeMap) /* records of operations */
-	var recordLines []string
-	var rs Records
+	tm := NewTimeline() /* records of operations */
+	rs := &Records{}
+
 	for _, line := range lines {
 		if line != AuditdSep {
-			recordLines = append(recordLines, line)
+			rs.AddLine(line)
 		} else {
-			rs.Initialize(recordLines)
-			rs.Process(&inodes)
-			rs, recordLines = nil, nil
+			inodes := rs.GetInodes()
+			tm.ApplyInodes(inodes)
+			rs = &Records{}
 		}
 	}
 }
 
-func parseToMap(str string) map[string]string {
+// Parse a string to key-value pairs
+func ParseKVPairs(str string) map[string]string {
 	result := make(map[string]string)
 	entries := strings.Split(str, " ")
 
@@ -173,7 +168,16 @@ func parseToMap(str string) map[string]string {
 	return result
 }
 
-func (r *Record) CreateRecord(rawstr string) {
+/* Holds parsed auditd records */
+type Record struct {
+	Type      string
+	Msg       string
+	Timestamp string
+	Body      map[string]string
+}
+
+// Create a Record from raw string
+func NewRecord(rawstr string) Record {
 	lines := strings.Split(rawstr, ": ")
 	if len(lines) != 2 {
 		err := errors.New("Invalid format of auditd line")
@@ -182,42 +186,51 @@ func (r *Record) CreateRecord(rawstr string) {
 	}
 
 	headerRaw, bodyRaw := lines[0], lines[1]
-	headers := parseToMap(headerRaw)
-	body := parseToMap(bodyRaw)
+	headers := ParseKVPairs(headerRaw)
+	body := ParseKVPairs(bodyRaw)
 
-	r.Type = headers["type"]
-	r.Msg = headers["msg"]
-	r.Body = body
-}
-
-func (records *Records) Initialize(lines []string) {
-	if len(lines) == 0 {
-		return
-	}
-
-	var timestamp string
-
-	for _, record := range lines {
-		if strings.Contains(record, "time->") {
-			timestamp = record[6:]
-			continue
-		}
-		var r Record
-		r.CreateRecord(record)
-		r.Timestamp = timestamp
-		*records = append(*records, r)
+	return Record{
+		Type: headers["type"],
+		Msg:  headers["msg"],
+		Body: body,
 	}
 }
 
-func (rs Records) Process(inodes *InodeMap) {
-	if rs == nil {
+// Hold multiple records
+type Records struct {
+	Records   []Record
+	Timestamp string // Also copied to all records
+}
+
+// Parse a raw string into Record and add it to itself
+func (rs *Records) AddLine(line string) {
+	if len(line) == 0 {
 		return
 	}
+
+	if strings.Contains(line, "time->") {
+		rs.Timestamp = line[6:]
+	} else {
+		r := NewRecord(line)
+		r.Timestamp = rs.Timestamp // assumes it's set by the first Record
+		rs.Records = append(rs.Records, r)
+	}
+}
+
+func (rs *Records) AddLines(lines []string) {
+	for _, line := range lines {
+		rs.AddLine(line)
+	}
+}
+
+// Generate Inodes from a set of records representing an event.
+func (rs Records) GetInodes() *Inodes {
 	// fmt.Println(rs)
+	inodes := Inodes{}
 
 	// Extract syscalls & proctitle
 	var syscall, proctitle Record
-	for _, r := range rs {
+	for _, r := range rs.Records {
 		switch r.Type {
 		case "SYSCALL":
 			syscall = r
@@ -227,45 +240,77 @@ func (rs Records) Process(inodes *InodeMap) {
 	}
 
 	// Extract inodes
-	for _, r := range rs {
+	for _, r := range rs.Records {
 		if r.Type == "PATH" {
-			var i Inode
-			i.Initialize(syscall, proctitle, r)
-			i.Process(inodes)
+			inode := NewInode(syscall, proctitle, r)
+			inodes.AddInode(inode)
 			// fmt.Println(i)
 		}
 	}
+
 	// fmt.Println(syscall, proctitle)
+	return &inodes
 }
 
-func (i *Inode) Initialize(syscall, proctitle, path Record) {
+/* Represents a path operation */
+type Inode struct {
+	Timestamp string
+	InodeNum  string
+	Device    string
+	Path      string
+	Operation string
+	Exe       string
+	Syscall   string
+	Proctitle string
+}
+
+func NewInode(syscall, proctitle, path Record) Inode {
 	decodeProctitle := func(hexstr string) string {
 		decoded, err := hex.DecodeString(hexstr)
 		check(err)
 		return string(decoded)
 	}
 
-	i.Timestamp = path.Timestamp
-	i.InodeNum = path.Body["inode"]
-	i.Device = path.Body["dev"]
-	i.Path = path.Body["name"]
-	i.Operation = path.Body["nametype"]
-	i.Exe = syscall.Body["exe"]
-	i.Syscall = syscall.Body["syscall"]
-	i.Proctitle = proctitle.Body["proctitle"]
+	i := Inode{
+		Timestamp: path.Timestamp,
+		InodeNum:  path.Body["inode"],
+		Device:    path.Body["dev"],
+		Path:      path.Body["name"],
+		Operation: path.Body["nametype"],
+		Exe:       syscall.Body["exe"],
+		Syscall:   syscall.Body["syscall"],
+		Proctitle: proctitle.Body["proctitle"],
+	}
 
 	i.Proctitle = decodeProctitle(i.Proctitle)
 	if AuSyscalls != nil {
 		i.Syscall = AuSyscalls[i.Syscall]
 	}
+
+	return i
 }
 
+// Get unique name for an Inode. It's unique for a given OS.
 func (i Inode) Name() string {
 	name := i.Device + "|" + i.InodeNum
 	return name
 }
 
-func (i *Inode) Process(inodes *InodeMap) {
+// Holds collection of Inodes
+type Inodes []Inode
+
+func (ins *Inodes) AddInode(i Inode) {
+	*ins = append(*ins, i)
+}
+
+// Play FS operations against a timeline
+type Timeline map[string]Inode
+
+func NewTimeline() Timeline {
+	return make(Timeline)
+}
+
+func (tm *Timeline) Apply(i *Inode) {
 	name := i.Name()
 	verifyUse := func() {
 		if i.Path == "(null)" {
@@ -273,7 +318,7 @@ func (i *Inode) Process(inodes *InodeMap) {
 			return
 		}
 
-		if old, ok := (*inodes)[name]; ok {
+		if old, ok := (*tm)[name]; ok {
 			if old.Path != i.Path {
 				fmt.Printf("Bad use(%v on %v)=%v create(%v on %v)=%v\n",
 					i.Exe, i.Syscall, i.Path,
@@ -284,15 +329,21 @@ func (i *Inode) Process(inodes *InodeMap) {
 
 	switch i.Operation {
 	case "CREATE":
-		(*inodes)[name] = *i
+		(*tm)[name] = *i
 	case "PARENT":
 		fallthrough
 	case "NORMAL":
 		verifyUse()
 	case "DELETE":
-		delete(*inodes, name)
+		delete(*tm, name)
 	default:
 		/* code */
 		log.Fatal("Unhandled PATH operation: ", i.Operation)
+	}
+}
+
+func (tm *Timeline) ApplyInodes(inodes *Inodes) {
+	for _, i := range *inodes {
+		tm.Apply(&i)
 	}
 }
