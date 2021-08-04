@@ -10,6 +10,7 @@ Running through the examples:
 To collect auditd logs of scenarios:
 ```bash
 # Trace: icase mount point
+sudo service auditd rotate
 sudo auditctl -w /mercury/research/casefolding -k icase
 ./nc-scenarios.sh
 sudo auditctl -D
@@ -31,4 +32,16 @@ go run ncmonitor.go examples/logs-2.auditd # run on example
 
 # For docs
 go doc -cmd -u
+```
+
+### Others
+
+Collect strace logs:
+```bash
+# Recorded on: 16-Jun-2021, 11:56 am EDT
+strace git clone srcrepo tgtrepo 2>clone.strace
+rm -rf tgtrepo
+
+# Search for FS related syscalls
+egrep -v "mprotect|munmap|mmap|getdents|brk|rt_sigaction" clone.strace | less
 ```
