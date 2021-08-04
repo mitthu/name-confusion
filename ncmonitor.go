@@ -19,10 +19,10 @@ package main
 import (
 	"encoding/hex"
 	"errors"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
-	"os"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -37,11 +37,11 @@ const AuditdSep string = "----"
 /* Populated via PopulateAuSyscalls() */
 var AuSyscalls map[string]string
 
-func check(err error) {
-	if err != nil {
-		panic(err)
-	}
-}
+/* Holds command-line flags */
+var (
+	flagVerbose = flag.Bool("verbose", false, "verbose output")
+	flagLogfile = flag.String("file", LogFile, "auditd `logfile` to parse")
+)
 
 func PopulateAuSyscalls() {
 	out, err := exec.Command("ausyscall", "--dump").Output()
@@ -64,24 +64,24 @@ func PopulateAuSyscalls() {
 }
 
 func main() {
-	fmt.Println("Name confusion monitoring utility")
 	PopulateAuSyscalls()
 
 	/* parse cmdline args */
-	logfile := LogFile
-	args := os.Args
-	if len(args) >= 2 {
-		logfile = args[1]
-	}
+	flag.Parse()
 
 	/* main logic */
-	ParseLog(logfile)
+	if *flagVerbose {
+		fmt.Println("Name confusion detection utility")
+	}
+	ParseLog(*flagLogfile)
 }
 
 // Shim to put it together
 func ParseLog(file string) {
 	content, err := ioutil.ReadFile(file)
-	check(err)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	contentStr := string(content)
 	lines := strings.Split(contentStr, "\n")
@@ -267,12 +267,6 @@ type Inode struct {
 }
 
 func NewInode(syscall, proctitle, path Record) Inode {
-	decodeProctitle := func(hexstr string) string {
-		decoded, err := hex.DecodeString(hexstr)
-		check(err)
-		return string(decoded)
-	}
-
 	i := Inode{
 		Timestamp: path.Timestamp,
 		InodeNum:  path.Body["inode"],
@@ -291,9 +285,15 @@ func NewInode(syscall, proctitle, path Record) Inode {
 
 	i.Path = strings.Trim(i.Path, "\"")
 
-	i.Proctitle = decodeProctitle(i.Proctitle)
 	if AuSyscalls != nil {
 		i.Syscall = AuSyscalls[i.Syscall]
+	}
+
+	decodedBytes, err := hex.DecodeString(i.Proctitle)
+	if err != nil {
+		log.Printf("%v; cannot decode proctitle for %v\n", err, i)
+	} else {
+		i.Proctitle = string(decodedBytes)
 	}
 
 	return i
@@ -392,7 +392,9 @@ func (tm Timeline) Apply(i *Inode) {
 	case "DELETE":
 		delete(tm, name)
 	case "UNKNOWN":
-		log.Printf("op=UNKNOWN: %v", i)
+		if *flagVerbose {
+			log.Printf("op=UNKNOWN: %v", i)
+		}
 	default:
 		/* code */
 		log.Fatal("Unhandled PATH operation: ", i.Operation)

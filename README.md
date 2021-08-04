@@ -27,8 +27,9 @@ sudo rm /var/log/audit/audit.log.1
 Find bad create-use pairs:
 ```bash
 # Run program on script
-go run ncmonitor.go logs.auditd
-go run ncmonitor.go examples/logs-2.auditd # run on example
+go run ncmonitor.go -verbose -file logs.auditd
+go run ncmonitor.go -file examples/logs-2.auditd # run on example
+go run ncmonitor.go -h # prints usage
 
 # For docs
 go doc -cmd -u
