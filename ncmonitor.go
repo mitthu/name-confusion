@@ -312,6 +312,14 @@ func NewTimeline() Timeline {
 
 func (tm *Timeline) Apply(i *Inode) {
 	name := i.Name()
+	recordCreate := func() {
+		if i.Path == "(null)" {
+			/* syscall operates on inode# */
+			return
+		}
+		// Record create
+		(*tm)[name] = *i
+	}
 	verifyUse := func() {
 		if i.Path == "(null)" {
 			/* syscall operates on inode# */
@@ -329,7 +337,7 @@ func (tm *Timeline) Apply(i *Inode) {
 
 	switch i.Operation {
 	case "CREATE":
-		(*tm)[name] = *i
+		recordCreate()
 	case "PARENT":
 		fallthrough
 	case "NORMAL":
