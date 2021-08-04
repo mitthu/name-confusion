@@ -360,11 +360,25 @@ func (tm Timeline) Apply(i *Inode) {
 			return
 		}
 
-		if old, ok := tm[name]; ok {
-			// found matching create
-			if old.NormalizedPath() != i.NormalizedPath() {
-				tm.Report(&old, i)
-			}
+		var create Inode
+		var ok bool
+		if create, ok = tm[name]; !ok {
+			return // no corresponding CREATE
+		}
+
+		// Test for inconsistency
+		// TODO: handle relative and absolute paths
+		cPATH := create.NormalizedPath()
+		uPATH := i.NormalizedPath()
+		switch {
+		case cPATH == uPATH:
+			// matching pathname
+		case strings.HasSuffix(cPATH, uPATH):
+			// USE is substring of CREATE
+		case strings.HasSuffix(uPATH, cPATH):
+			// CREATE is substring of USE
+		default:
+			tm.Report(&create, i)
 		}
 	}
 
