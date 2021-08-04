@@ -338,7 +338,7 @@ func NewTimeline() Timeline {
 
 // Function to report a violation
 func (tm Timeline) Report(create, use *Inode) {
-	fmt.Printf("Bad use(%v on %v)=%v create(%v on %v)=%v\n",
+	fmt.Printf("use(%v on %v)=%v create(%v on %v)=%v\n",
 		use.Exe, use.Syscall, use.NormalizedPath(),
 		create.Exe, create.Syscall, create.NormalizedPath())
 }
@@ -391,6 +391,8 @@ func (tm Timeline) Apply(i *Inode) {
 		verifyUse()
 	case "DELETE":
 		delete(tm, name)
+	case "UNKNOWN":
+		log.Printf("op=UNKNOWN: %v", i)
 	default:
 		/* code */
 		log.Fatal("Unhandled PATH operation: ", i.Operation)
