@@ -24,6 +24,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 )
 
@@ -258,6 +259,7 @@ type Inode struct {
 	InodeNum  string
 	Device    string
 	Path      string
+	Mode      uint16
 	Operation string
 	Exe       string
 	Syscall   string
@@ -276,11 +278,18 @@ func NewInode(syscall, proctitle, path Record) Inode {
 		InodeNum:  path.Body["inode"],
 		Device:    path.Body["dev"],
 		Path:      path.Body["name"],
+		Mode:      0,
 		Operation: path.Body["nametype"],
 		Exe:       syscall.Body["exe"],
 		Syscall:   syscall.Body["syscall"],
 		Proctitle: proctitle.Body["proctitle"],
 	}
+
+	// Post-process relevant fields
+	mode, _ := strconv.Atoi(path.Body["mode"])
+	i.Mode = uint16(mode)
+
+	i.Path = strings.Trim(i.Path, "\"")
 
 	i.Proctitle = decodeProctitle(i.Proctitle)
 	if AuSyscalls != nil {
@@ -294,6 +303,23 @@ func NewInode(syscall, proctitle, path Record) Inode {
 func (i Inode) Name() string {
 	name := i.Device + "|" + i.InodeNum
 	return name
+}
+
+// Is it directory or file (regular, pipe, etc.)?
+func (i Inode) IsDir() bool {
+	// See stat.st_mode (in man 7 inode)
+	if (i.Mode & 40000) > 1 {
+		return true
+	}
+	return false
+}
+
+// Remove trailing "/" only if directory. We don't touch symbolic links.
+func (i Inode) NormalizedPath() string {
+	if i.IsDir() {
+		return strings.TrimSuffix(i.Path, "/")
+	}
+	return i.Path
 }
 
 // Holds collection of Inodes
@@ -310,7 +336,15 @@ func NewTimeline() Timeline {
 	return make(Timeline)
 }
 
-func (tm *Timeline) Apply(i *Inode) {
+// Function to report a violation
+func (tm Timeline) Report(create, use *Inode) {
+	fmt.Printf("Bad use(%v on %v)=%v create(%v on %v)=%v\n",
+		use.Exe, use.Syscall, use.NormalizedPath(),
+		create.Exe, create.Syscall, create.NormalizedPath())
+}
+
+// Apply a single inode against the timeline
+func (tm Timeline) Apply(i *Inode) {
 	name := i.Name()
 	recordCreate := func() {
 		if i.Path == "(null)" {
@@ -318,7 +352,7 @@ func (tm *Timeline) Apply(i *Inode) {
 			return
 		}
 		// Record create
-		(*tm)[name] = *i
+		tm[name] = *i
 	}
 	verifyUse := func() {
 		if i.Path == "(null)" {
@@ -326,11 +360,10 @@ func (tm *Timeline) Apply(i *Inode) {
 			return
 		}
 
-		if old, ok := (*tm)[name]; ok {
-			if old.Path != i.Path {
-				fmt.Printf("Bad use(%v on %v)=%v create(%v on %v)=%v\n",
-					i.Exe, i.Syscall, i.Path,
-					old.Exe, old.Syscall, old.Path)
+		if old, ok := tm[name]; ok {
+			// found matching create
+			if old.NormalizedPath() != i.NormalizedPath() {
+				tm.Report(&old, i)
 			}
 		}
 	}
@@ -343,14 +376,15 @@ func (tm *Timeline) Apply(i *Inode) {
 	case "NORMAL":
 		verifyUse()
 	case "DELETE":
-		delete(*tm, name)
+		delete(tm, name)
 	default:
 		/* code */
 		log.Fatal("Unhandled PATH operation: ", i.Operation)
 	}
 }
 
-func (tm *Timeline) ApplyInodes(inodes *Inodes) {
+// Apply set of inodes against a timeline
+func (tm Timeline) ApplyInodes(inodes *Inodes) {
 	for _, i := range *inodes {
 		tm.Apply(&i)
 	}
