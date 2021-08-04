@@ -36,6 +36,18 @@ go doc -cmd -u
 
 ### Others
 
+Using git from docker container (os=alpine):
+```bash
+VER=v2.24.1       # uid=0    (root)
+VER=v2.24.3-user  # uid=1000
+
+git() {
+	docker run -ti --rm -v $(pwd):/git alpine/git:${VER} "$@"
+}
+
+git --version
+```
+
 Collect strace logs:
 ```bash
 # Recorded on: 16-Jun-2021, 11:56 am EDT
