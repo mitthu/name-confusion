@@ -39,16 +39,22 @@ var AuSyscalls map[string]string
 
 /* Holds command-line flags */
 var (
-	flagVerbose = flag.Bool("verbose", false, "verbose output")
-	flagLogfile = flag.String("file", LogFile, "auditd `logfile` to parse")
+	flagVerbose     = flag.Bool("verbose", false, "verbose output")
+	flagLogfile     = flag.String("file", LogFile, "auditd `logfile` to parse")
+	capSyscallNames bool // capability to convert syscall numbers to names
 )
 
 func PopulateAuSyscalls() {
 	out, err := exec.Command("ausyscall", "--dump").Output()
 	if err != nil {
+		if *flagVerbose {
+			log.Printf("couldn't convert syscall numbers to names: %v\n", err)
+		}
+		capSyscallNames = false
 		return
 	}
 
+	capSyscallNames = true
 	AuSyscalls = make(map[string]string)
 
 	output := string(out)
