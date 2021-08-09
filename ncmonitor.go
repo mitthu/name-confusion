@@ -382,6 +382,9 @@ func (tm Timeline) ReportImmediatly(create, use *Inode) {
 	fmt.Printf("use['%v'.%v]=%s create['%v'.%v]=%s\n",
 		path.Base(use.Exe), use.Syscall, use.NormalizedPath(),
 		path.Base(create.Exe), create.Syscall, create.NormalizedPath())
+	if *flagVerbose {
+		fmt.Printf("\tuse: %v, create:%v\n", use.Msg, create.Msg)
+	}
 }
 
 // Collect all violations for reporting later
