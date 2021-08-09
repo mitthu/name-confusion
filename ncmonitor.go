@@ -295,6 +295,8 @@ func NewInode(syscall, proctitle, path Record) Inode {
 
 	i.Path = strings.Trim(i.Path, "\"")
 
+	i.Exe = strings.Trim(i.Exe, "\"")
+
 	if AuSyscalls != nil {
 		i.Syscall = AuSyscalls[i.Syscall]
 	}
