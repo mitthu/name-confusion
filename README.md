@@ -29,6 +29,10 @@ Find bad create-use pairs:
 # Run program on script
 go run ncmonitor.go -verbose -file logs.auditd
 go run ncmonitor.go -file examples/logs-2.auditd # run on example
+
+go run ncmonitor.go -json # output in json
+go run ncmonitor.go -json -pretty # output in json (pretty printed)
+
 go run ncmonitor.go -h # prints usage
 
 # For docs

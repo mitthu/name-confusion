@@ -19,6 +19,7 @@ package main
 import (
 	"bytes"
 	"encoding/hex"
+	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
@@ -43,6 +44,8 @@ var AuSyscalls map[string]string
 var (
 	flagVerbose     = flag.Bool("verbose", false, "verbose output")
 	flagLogfile     = flag.String("file", LogFile, "auditd `logfile` to parse")
+	flagJson        = flag.Bool("json", false, "output in json")
+	flagPretty      = flag.Bool("pretty", false, "pretty-print json output")
 	capSyscallNames bool // capability to convert syscall numbers to names
 )
 
@@ -95,6 +98,7 @@ func ParseLog(file string) {
 	lines := strings.Split(contentStr, "\n")
 
 	tm := NewTimeline() /* records of operations */
+	defer tm.Close()
 	rs := &Records{}
 
 	for _, line := range lines {
@@ -350,22 +354,63 @@ func (ins *Inodes) AddInode(i Inode) {
 	*ins = append(*ins, i)
 }
 
-// Play FS operations against a timeline
-type Timeline map[string]Inode
+// Report of create-use pairs
+type Report struct{ Create, Use *Inode }
 
-func NewTimeline() Timeline {
-	return make(Timeline)
+// Play FS operations against a timeline
+type Timeline struct {
+	history map[string]Inode
+	reports []Report
 }
 
-// Function to report a violation
-func (tm Timeline) Report(create, use *Inode) {
+func NewTimeline() Timeline {
+	tm := Timeline{history: make(map[string]Inode)}
+	return tm
+}
+
+func (tm *Timeline) Report(create, use *Inode) {
+	if *flagJson {
+		tm.ReportLater(create, use)
+	} else {
+		tm.ReportImmediatly(create, use)
+	}
+}
+
+// Immediately report violations
+func (tm Timeline) ReportImmediatly(create, use *Inode) {
 	fmt.Printf("use(%v on %v)=%v create(%v on %v)=%v\n",
 		use.Exe, use.Syscall, use.NormalizedPath(),
 		create.Exe, create.Syscall, create.NormalizedPath())
 }
 
+// Collect all violations for reporting later
+func (tm *Timeline) ReportLater(create, use *Inode) {
+	r := Report{create, use}
+	tm.reports = append(tm.reports, r)
+}
+
+// Output all collected violations
+func (tm Timeline) processPendingRepots(pretty bool) {
+	if len(tm.reports) == 0 {
+		return
+	}
+
+	var result []byte
+	if pretty {
+		result, _ = json.MarshalIndent(tm.reports, "", "  ")
+	} else {
+		result, _ = json.Marshal(tm.reports)
+	}
+
+	fmt.Println(string(result))
+}
+
+func (tm *Timeline) Close() {
+	tm.processPendingRepots(*flagPretty)
+}
+
 // Apply a single inode against the timeline
-func (tm Timeline) Apply(i *Inode) {
+func (tm *Timeline) Apply(i *Inode) {
 	name := i.Name()
 	recordCreate := func() {
 		if i.Path == "(null)" {
@@ -373,7 +418,7 @@ func (tm Timeline) Apply(i *Inode) {
 			return
 		}
 		// Record create
-		tm[name] = *i
+		tm.history[name] = *i
 	}
 	verifyUse := func() {
 		if i.Path == "(null)" {
@@ -383,7 +428,7 @@ func (tm Timeline) Apply(i *Inode) {
 
 		var create Inode
 		var ok bool
-		if create, ok = tm[name]; !ok {
+		if create, ok = tm.history[name]; !ok {
 			return // no corresponding CREATE
 		}
 
@@ -411,7 +456,7 @@ func (tm Timeline) Apply(i *Inode) {
 	case "NORMAL":
 		verifyUse()
 	case "DELETE":
-		delete(tm, name)
+		delete(tm.history, name)
 	case "UNKNOWN":
 		if *flagVerbose {
 			log.Printf("op=UNKNOWN: %v", i)
@@ -423,7 +468,7 @@ func (tm Timeline) Apply(i *Inode) {
 }
 
 // Apply set of inodes against a timeline
-func (tm Timeline) ApplyInodes(inodes *Inodes) {
+func (tm *Timeline) ApplyInodes(inodes *Inodes) {
 	for _, i := range *inodes {
 		tm.Apply(&i)
 	}
