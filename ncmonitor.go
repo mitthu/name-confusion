@@ -17,6 +17,7 @@ To summarize:
 package main
 
 import (
+	"bytes"
 	"encoding/hex"
 	"errors"
 	"flag"
@@ -26,6 +27,7 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
+	"unicode/utf8"
 )
 
 // Example file to parse when no input is given
@@ -301,7 +303,16 @@ func NewInode(syscall, proctitle, path Record) Inode {
 	if err != nil {
 		log.Printf("%v; cannot decode proctitle for %v\n", err, i)
 	} else {
-		i.Proctitle = string(decodedBytes)
+		// replace nulls with space in string
+		charNull := make([]byte, 1)
+		charSpace := make([]byte, 1)
+
+		utf8.EncodeRune(charNull, '\u0000')
+		utf8.EncodeRune(charSpace, ' ')
+		withSpaces := bytes.ReplaceAll(decodedBytes, charNull, charSpace)
+
+		// string recovered
+		i.Proctitle = string(withSpaces)
 	}
 
 	return i
