@@ -262,6 +262,7 @@ func (rs Records) GetInodes() *Inodes {
 /* Represents a path operation */
 type Inode struct {
 	Timestamp string
+	Msg       string // ID of record
 	InodeNum  string
 	Device    string
 	Path      string
@@ -275,6 +276,7 @@ type Inode struct {
 func NewInode(syscall, proctitle, path Record) Inode {
 	i := Inode{
 		Timestamp: path.Timestamp,
+		Msg:       path.Msg,
 		InodeNum:  path.Body["inode"],
 		Device:    path.Body["dev"],
 		Path:      path.Body["name"],
