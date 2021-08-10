@@ -26,6 +26,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os/exec"
+	"path"
 	"strconv"
 	"strings"
 	"unicode/utf8"
@@ -378,9 +379,9 @@ func (tm *Timeline) Report(create, use *Inode) {
 
 // Immediately report violations
 func (tm Timeline) ReportImmediatly(create, use *Inode) {
-	fmt.Printf("use(%v on %v)=%v create(%v on %v)=%v\n",
-		use.Exe, use.Syscall, use.NormalizedPath(),
-		create.Exe, create.Syscall, create.NormalizedPath())
+	fmt.Printf("use['%v'.%v]=%s create['%v'.%v]=%s\n",
+		path.Base(use.Exe), use.Syscall, use.NormalizedPath(),
+		path.Base(create.Exe), create.Syscall, create.NormalizedPath())
 }
 
 // Collect all violations for reporting later
