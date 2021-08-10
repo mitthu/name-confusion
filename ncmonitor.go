@@ -43,7 +43,7 @@ var AuSyscalls map[string]string
 
 /* Holds command-line flags */
 var (
-	flagVerbose     = flag.Bool("verbose", false, "verbose output")
+	flagVerbose     = flag.Bool("verbose", false, "verbose output; lines starting with 'info:' are writted to stderr")
 	flagLogfile     = flag.String("file", LogFile, "auditd `logfile` to parse")
 	flagJson        = flag.Bool("json", false, "output in json")
 	flagPretty      = flag.Bool("pretty", false, "pretty-print json output")
@@ -82,9 +82,13 @@ func main() {
 	/* parse cmdline args */
 	flag.Parse()
 
+	/* set logging */
+	log.SetPrefix("info: ")
+	log.SetFlags(0) // disable data & time
+
 	/* main logic */
 	if *flagVerbose {
-		fmt.Println("Name confusion detection utility")
+		log.Println("Name confusion detection utility")
 	}
 	ParseLog(*flagLogfile)
 }
@@ -314,7 +318,11 @@ func NewInode(syscall, proctitle, cwd, path Record) Inode {
 	i.Exe = strings.Trim(i.Exe, "\"")
 
 	if AuSyscalls != nil {
-		i.Syscall = AuSyscalls[i.Syscall]
+		if *flagVerbose {
+			i.Syscall = AuSyscalls[i.Syscall] + "(" + i.Syscall + ")"
+		} else {
+			i.Syscall = AuSyscalls[i.Syscall]
+		}
 	}
 
 	decodedBytes, err := hex.DecodeString(i.Proctitle)
@@ -421,11 +429,14 @@ func (tm Timeline) ReportImmediatly(create, use *Inode) {
 		uPath = use.Path
 	}
 
-	fmt.Printf("use['%v'.%v]=%s create['%v'.%v]=%s\n",
+	fmt.Printf("use['%v'.%v]=%s create['%v'.%v]=%s",
 		path.Base(use.Exe), use.Syscall, uPath,
 		path.Base(create.Exe), create.Syscall, cPath)
+
 	if *flagVerbose {
-		fmt.Printf("\tuse: %v, create:%v\n", use.Msg, create.Msg)
+		fmt.Printf(" [+] use: %v create: %v\n", use.Msg, create.Msg)
+	} else {
+		fmt.Printf("\n")
 	}
 }
 
