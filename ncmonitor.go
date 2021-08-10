@@ -47,6 +47,7 @@ var (
 	flagLogfile     = flag.String("file", LogFile, "auditd `logfile` to parse")
 	flagJson        = flag.Bool("json", false, "output in json")
 	flagPretty      = flag.Bool("pretty", false, "pretty-print json output")
+	flagAbsPath     = flag.Bool("abspath", false, "convert paths to absolute for non-json output")
 	capSyscallNames bool // capability to convert syscall numbers to names
 )
 
@@ -242,21 +243,29 @@ func (rs Records) GetInodes() *Inodes {
 	// fmt.Println(rs)
 	inodes := Inodes{}
 
-	// Extract syscalls & proctitle
-	var syscall, proctitle Record
+	// Extract specific records
+	var syscall, proctitle, cwd Record
 	for _, r := range rs.Records {
 		switch r.Type {
 		case "SYSCALL":
 			syscall = r
 		case "PROCTITLE":
 			proctitle = r
+		case "CWD":
+			cwd = r
+		case "PATH":
+		case "CONFIG_CHANGE":
+		default:
+			if *flagVerbose {
+				log.Println("unknown record type:", r)
+			}
 		}
 	}
 
 	// Extract inodes
 	for _, r := range rs.Records {
 		if r.Type == "PATH" {
-			inode := NewInode(syscall, proctitle, r)
+			inode := NewInode(syscall, proctitle, cwd, r)
 			inodes.AddInode(inode)
 			// fmt.Println(i)
 		}
@@ -278,9 +287,10 @@ type Inode struct {
 	Exe       string
 	Syscall   string
 	Proctitle string
+	Cwd       string
 }
 
-func NewInode(syscall, proctitle, path Record) Inode {
+func NewInode(syscall, proctitle, cwd, path Record) Inode {
 	i := Inode{
 		Timestamp: path.Timestamp,
 		Msg:       path.Msg,
@@ -292,6 +302,7 @@ func NewInode(syscall, proctitle, path Record) Inode {
 		Exe:       syscall.Body["exe"],
 		Syscall:   syscall.Body["syscall"],
 		Proctitle: proctitle.Body["proctitle"],
+		Cwd:       cwd.Body["cwd"],
 	}
 
 	// Post-process relevant fields
@@ -322,6 +333,9 @@ func NewInode(syscall, proctitle, path Record) Inode {
 		i.Proctitle = string(withSpaces)
 	}
 
+	// process valid cwd entry
+	i.Cwd = strings.Trim(i.Cwd, "\"")
+
 	return i
 }
 
@@ -329,6 +343,23 @@ func NewInode(syscall, proctitle, path Record) Inode {
 func (i Inode) Name() string {
 	name := i.Device + "|" + i.InodeNum
 	return name
+}
+
+// Convert relative paths to absolute paths using "cwd".
+func (i Inode) getAbsPath() string {
+	// ensure paths aren't empty
+	if len(strings.Trim(i.Cwd, " ")) == 0 ||
+		len(strings.Trim(i.Path, " ")) == 0 {
+		return i.Path
+	}
+
+	// is path already absolute or null?
+	if i.Path[0] == '/' || i.Path == "(null)" {
+		return i.Path
+	}
+
+	// make absolute path
+	return path.Join(i.Cwd, i.Path)
 }
 
 // Is it directory or file (regular, pipe, etc.)?
@@ -342,10 +373,11 @@ func (i Inode) IsDir() bool {
 
 // Remove trailing "/" only if directory. We don't touch symbolic links.
 func (i Inode) NormalizedPath() string {
+	p := i.getAbsPath()
 	if i.IsDir() {
-		return strings.TrimSuffix(i.Path, "/")
+		return strings.TrimSuffix(p, "/")
 	}
-	return i.Path
+	return p
 }
 
 // Holds collection of Inodes
@@ -379,9 +411,19 @@ func (tm *Timeline) Report(create, use *Inode) {
 
 // Immediately report violations
 func (tm Timeline) ReportImmediatly(create, use *Inode) {
+	// choose path repr.
+	var cPath, uPath string
+	if *flagAbsPath {
+		cPath = create.NormalizedPath()
+		uPath = use.NormalizedPath()
+	} else {
+		cPath = create.Path
+		uPath = use.Path
+	}
+
 	fmt.Printf("use['%v'.%v]=%s create['%v'.%v]=%s\n",
-		path.Base(use.Exe), use.Syscall, use.NormalizedPath(),
-		path.Base(create.Exe), create.Syscall, create.NormalizedPath())
+		path.Base(use.Exe), use.Syscall, uPath,
+		path.Base(create.Exe), create.Syscall, cPath)
 	if *flagVerbose {
 		fmt.Printf("\tuse: %v, create:%v\n", use.Msg, create.Msg)
 	}
@@ -437,17 +479,9 @@ func (tm *Timeline) Apply(i *Inode) {
 		}
 
 		// Test for inconsistency
-		// TODO: handle relative and absolute paths
 		cPATH := create.NormalizedPath()
 		uPATH := i.NormalizedPath()
-		switch {
-		case cPATH == uPATH:
-			// matching pathname
-		case strings.HasSuffix(cPATH, uPATH):
-			// USE is substring of CREATE
-		case strings.HasSuffix(uPATH, cPATH):
-			// CREATE is substring of USE
-		default:
+		if cPATH != uPATH {
 			tm.Report(&create, i)
 		}
 	}
