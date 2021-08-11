@@ -19,6 +19,8 @@ sudo service auditd rotate
 # Search these logs
 sudo ausearch -k icase | tee logs.auditd # OR
 sudo ausearch -k icase -i # to view on console
+ausearch -if examples/logs-1.auditd -i # provide log file
+ausearch -if examples/logs-1.auditd -i -a 10947 # search using msg ID
 
 # Delete logs
 sudo rm /var/log/audit/audit.log.1
