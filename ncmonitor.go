@@ -11,6 +11,7 @@ To summarize:
 	- Create Record
 	- Add Record to Records
 	- Generate Inodes from Records
+		* Generate & embed Syscall
 	- Apply Inodes against a Timeline
 
 */
@@ -279,6 +280,82 @@ func (rs Records) GetInodes() *Inodes {
 	return &inodes
 }
 
+/* Represents a syscall operation */
+type Syscall struct {
+	Msg     string // ID of record
+	Name    string
+	Number  uint64
+	Exe     string
+	Cmd     string
+	Pid     int64
+	Ppid    int64
+	A0      uint64
+	A1      uint64
+	A2      uint64
+	A3      uint64
+	Exit    int64
+	Success bool
+
+	record Record
+}
+
+// Create a Syscall from Record
+func NewSyscall(r Record) Syscall {
+	// ensure syscall record
+	if r.Type != "SYSCALL" {
+		log.Fatalf("cannot create Syscall from record.type=%s\n", r.Type)
+	}
+
+	// construct base syscall
+	s := Syscall{
+		Msg:    r.Msg,
+		Name:   "",
+		Exe:    strings.Trim(r.Body["exe"], "\""),
+		Cmd:    strings.Trim(r.Body["cmd"], "\""),
+		record: r,
+	}
+
+	// add number & name
+	s.Number, _ = strconv.ParseUint(r.Body["syscall"], 10, 64)
+	if AuSyscalls != nil {
+		s.Name = AuSyscalls[fmt.Sprint(s.Number)]
+	}
+
+	// add other metadata
+	s.Pid, _ = strconv.ParseInt(r.Body["pid"], 10, 64)
+	s.Ppid, _ = strconv.ParseInt(r.Body["ppid"], 10, 64)
+
+	s.A0, _ = strconv.ParseUint(r.Body["a0"], 16, 64)
+	s.A1, _ = strconv.ParseUint(r.Body["a1"], 16, 64)
+	s.A2, _ = strconv.ParseUint(r.Body["a2"], 16, 64)
+	s.A3, _ = strconv.ParseUint(r.Body["a3"], 16, 64)
+
+	// add exit status
+	s.Exit, _ = strconv.ParseInt(r.Body["exit"], 10, 64)
+	if r.Body["success"] == "yes" {
+		s.Success = true
+	} else {
+		s.Success = false
+	}
+
+	return s
+}
+
+// String repr. of syscall
+func (s Syscall) String() string {
+	// if we don't have its name
+	if len(s.Name) == 0 {
+		return fmt.Sprint("syscall=", s.Number)
+	}
+
+	// for verbose print name & number
+	if *flagVerbose {
+		return fmt.Sprintf("%s(%v)", s.Name, s.Number)
+	}
+
+	return s.Name
+}
+
 /* Represents a path operation */
 type Inode struct {
 	Timestamp string
@@ -289,7 +366,7 @@ type Inode struct {
 	Mode      uint16
 	Operation string
 	Exe       string
-	Syscall   string
+	Syscall   Syscall
 	Proctitle string
 	Cwd       string
 }
@@ -304,7 +381,7 @@ func NewInode(syscall, proctitle, cwd, path Record) Inode {
 		Mode:      0,
 		Operation: path.Body["nametype"],
 		Exe:       syscall.Body["exe"],
-		Syscall:   syscall.Body["syscall"],
+		Syscall:   NewSyscall(syscall),
 		Proctitle: proctitle.Body["proctitle"],
 		Cwd:       cwd.Body["cwd"],
 	}
@@ -316,14 +393,6 @@ func NewInode(syscall, proctitle, cwd, path Record) Inode {
 	i.Path = strings.Trim(i.Path, "\"")
 
 	i.Exe = strings.Trim(i.Exe, "\"")
-
-	if AuSyscalls != nil {
-		if *flagVerbose {
-			i.Syscall = AuSyscalls[i.Syscall] + "(" + i.Syscall + ")"
-		} else {
-			i.Syscall = AuSyscalls[i.Syscall]
-		}
-	}
 
 	decodedBytes, err := hex.DecodeString(i.Proctitle)
 	if err != nil {
