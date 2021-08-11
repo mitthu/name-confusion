@@ -353,6 +353,33 @@ func (i Inode) Name() string {
 	return name
 }
 
+// String repr. for printing on console
+func (i Inode) String() string {
+	// absolute or relative path
+	var p string
+	if *flagAbsPath {
+		p = i.NormalizedPath()
+	} else {
+		p = i.Path
+	}
+
+	// verbose mode
+	var msg string
+	if *flagVerbose {
+		msg = i.Msg
+	} else {
+		msg = ""
+
+	}
+
+	// example of string repr.:
+	// [audit(1628098489.574:15451)'git'.unlink(87)]00:39|2123|a/
+	str := fmt.Sprintf("[%v'%v'.%v]%v|%s",
+		msg, path.Base(i.Exe), i.Syscall, i.Name(), p)
+
+	return str
+}
+
 // Convert relative paths to absolute paths using "cwd".
 func (i Inode) getAbsPath() string {
 	// ensure paths aren't empty
@@ -419,25 +446,7 @@ func (tm *Timeline) Report(create, use *Inode) {
 
 // Immediately report violations
 func (tm Timeline) ReportImmediatly(create, use *Inode) {
-	// choose path repr.
-	var cPath, uPath string
-	if *flagAbsPath {
-		cPath = create.NormalizedPath()
-		uPath = use.NormalizedPath()
-	} else {
-		cPath = create.Path
-		uPath = use.Path
-	}
-
-	fmt.Printf("use['%v'.%v]=%s create['%v'.%v]=%s",
-		path.Base(use.Exe), use.Syscall, uPath,
-		path.Base(create.Exe), create.Syscall, cPath)
-
-	if *flagVerbose {
-		fmt.Printf(" [+] use: %v create: %v\n", use.Msg, create.Msg)
-	} else {
-		fmt.Printf("\n")
-	}
+	fmt.Printf("USE%v CREATE%v\n", use, create)
 }
 
 // Collect all violations for reporting later
