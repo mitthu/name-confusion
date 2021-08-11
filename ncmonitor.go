@@ -629,9 +629,12 @@ func (tm *Timeline) Apply(i *Inode) {
 	}
 }
 
-// Apply set of inodes against a timeline
+// Apply set of inodes against a timeline.
+//
+// We apply in reverse order to preserve order of operations, i.e. apply item=0,
+// item=1 and so on.
 func (tm *Timeline) ApplyInodes(inodes *Inodes) {
-	for _, i := range *inodes {
-		tm.Apply(&i)
+	for i := len(*inodes) - 1; i >= 0; i-- {
+		tm.Apply(&(*inodes)[i])
 	}
 }
