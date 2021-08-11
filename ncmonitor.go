@@ -49,6 +49,7 @@ var (
 	flagJson        = flag.Bool("json", false, "output in json")
 	flagPretty      = flag.Bool("pretty", false, "pretty-print json output")
 	flagAbsPath     = flag.Bool("abspath", false, "convert paths to absolute for non-json output")
+	flagLogBadOpen  = flag.Bool("logbadopen", false, "log uses of existing files with O_CREAT flag")
 	capSyscallNames bool // capability to convert syscall numbers to names
 )
 
@@ -356,6 +357,26 @@ func (s Syscall) String() string {
 	return s.Name
 }
 
+// For open and openat, is O_CREAT set?
+func (s Syscall) FlagCreate() bool {
+	O_CREAT := uint64(0100)
+
+	// refer: https://marcin.juszkiewicz.com.pl/download/tables/syscalls.html
+	switch {
+	case s.Name == "open" || s.Number == 2:
+		if (s.A1 & O_CREAT) > 1 {
+			return true
+		}
+	case s.Name == "openat" || s.Number == 257:
+		if (s.A2 & O_CREAT) > 1 {
+			return true
+		}
+	case s.Name == "openat2" || s.Number == 437:
+		log.Print("openat2 flags are not handled")
+	}
+	return false
+}
+
 /* Represents a path operation */
 type Inode struct {
 	Timestamp string
@@ -556,6 +577,10 @@ func (tm *Timeline) Apply(i *Inode) {
 		tm.history[name] = *i
 	}
 	verifyUse := func() {
+		if *flagLogBadOpen && i.Syscall.FlagCreate() {
+			log.Printf("use with O_CREAT: %v", i)
+		}
+
 		if i.Path == "(null)" {
 			/* syscall operates on inode# */
 			return
