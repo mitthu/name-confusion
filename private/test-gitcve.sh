@@ -15,16 +15,22 @@ git config --global init.templatedir /usr/share/git-core/templates
 #git config --global init.templatedir --unset-all
 
 trace_start() {
+	# remove old logs
+	sudo rm -f /var/log/audit/*
 	rm -f logs.auditd
+
+	# rotate log & add rules
 	sudo service auditd rotate
 	sudo auditctl -w /mercury/research/casefolding -k icase
 }
 
 trace_end() {
+	# delete rules
 	sudo auditctl -D
 	sudo service auditd rotate
+
+	# get a copy of all logs
 	sudo ausearch -k icase | tee logs.auditd >/dev/null
-	# sudo rm /var/log/audit/audit.log.1
 }
 
 sanity_checks() {
