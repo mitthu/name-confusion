@@ -569,6 +569,11 @@ func (tm *Timeline) Close() {
 func (tm *Timeline) Apply(i *Inode) {
 	name := i.Name()
 	recordCreate := func() {
+		// ignore failed syscall
+		if !i.Syscall.Success {
+			return
+		}
+
 		if i.Path == "(null)" {
 			/* syscall operates on inode# */
 			return
@@ -577,6 +582,11 @@ func (tm *Timeline) Apply(i *Inode) {
 		tm.history[name] = *i
 	}
 	verifyUse := func() {
+		// ignore failed syscall
+		if !i.Syscall.Success {
+			return
+		}
+
 		if *flagLogBadOpen && i.Syscall.FlagCreate() {
 			log.Printf("use with O_CREAT: %v", i)
 		}
