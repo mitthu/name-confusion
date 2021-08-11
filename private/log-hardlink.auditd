@@ -1,0 +1,42 @@
+----
+time->Wed Aug 11 19:51:50 2021
+type=CONFIG_CHANGE msg=audit(1628725910.095:33725): auid=1000 ses=30 op=add_rule key="icase" list=4 res=1
+----
+time->Wed Aug 11 19:51:50 2021
+type=PROCTITLE msg=audit(1628725910.095:33728): proctitle=746F7563680072656766696C65
+type=PATH msg=audit(1628725910.095:33728): item=1 name="regfile" inode=6854 dev=00:39 mode=0100664 ouid=1000 ogid=1000 rdev=00:00 nametype=CREATE cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=PATH msg=audit(1628725910.095:33728): item=0 name="/mercury/research/casefolding/linktest" inode=6956 dev=00:39 mode=040775 ouid=1000 ogid=1000 rdev=00:00 nametype=PARENT cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=CWD msg=audit(1628725910.095:33728): cwd="/mercury/research/casefolding/linktest"
+type=SYSCALL msg=audit(1628725910.095:33728): arch=c000003e syscall=257 success=yes exit=3 a0=ffffff9c a1=7ffc18307ff5 a2=941 a3=1b6 items=2 ppid=19959 pid=20004 auid=1000 uid=1000 gid=1000 euid=1000 suid=1000 fsuid=1000 egid=1000 sgid=1000 fsgid=1000 tty=pts8 ses=30 comm="touch" exe="/bin/touch" key="icase"
+----
+time->Wed Aug 11 19:51:50 2021
+type=PROCTITLE msg=audit(1628725910.095:33729): proctitle=6C6E0072656766696C6500686172646C696E6B
+type=PATH msg=audit(1628725910.095:33729): item=2 name="hardlink" inode=6854 dev=00:39 mode=0100664 ouid=1000 ogid=1000 rdev=00:00 nametype=CREATE cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=PATH msg=audit(1628725910.095:33729): item=1 name="/mercury/research/casefolding/linktest" inode=6956 dev=00:39 mode=040775 ouid=1000 ogid=1000 rdev=00:00 nametype=PARENT cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=PATH msg=audit(1628725910.095:33729): item=0 name="regfile" inode=6854 dev=00:39 mode=0100664 ouid=1000 ogid=1000 rdev=00:00 nametype=NORMAL cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=CWD msg=audit(1628725910.095:33729): cwd="/mercury/research/casefolding/linktest"
+type=SYSCALL msg=audit(1628725910.095:33729): arch=c000003e syscall=265 success=yes exit=0 a0=ffffff9c a1=7ffc22752ffa a2=ffffff9c a3=7ffc22753002 items=3 ppid=19959 pid=20005 auid=1000 uid=1000 gid=1000 euid=1000 suid=1000 fsuid=1000 egid=1000 sgid=1000 fsgid=1000 tty=pts8 ses=30 comm="ln" exe="/bin/ln" key="icase"
+----
+time->Wed Aug 11 19:51:50 2021
+type=PROCTITLE msg=audit(1628725910.095:33730): proctitle=2F62696E2F62617368002E2F6C696E6B732E7368
+type=PATH msg=audit(1628725910.095:33730): item=1 name="regfile" inode=6854 dev=00:39 mode=0100664 ouid=1000 ogid=1000 rdev=00:00 nametype=NORMAL cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=PATH msg=audit(1628725910.095:33730): item=0 name="/mercury/research/casefolding/linktest" inode=6956 dev=00:39 mode=040775 ouid=1000 ogid=1000 rdev=00:00 nametype=PARENT cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=CWD msg=audit(1628725910.095:33730): cwd="/mercury/research/casefolding/linktest"
+type=SYSCALL msg=audit(1628725910.095:33730): arch=c000003e syscall=257 success=yes exit=3 a0=ffffff9c a1=5597164a0ff0 a2=241 a3=1b6 items=2 ppid=17073 pid=19959 auid=1000 uid=1000 gid=1000 euid=1000 suid=1000 fsuid=1000 egid=1000 sgid=1000 fsgid=1000 tty=pts8 ses=30 comm="links.sh" exe="/bin/bash" key="icase"
+----
+time->Wed Aug 11 19:51:50 2021
+type=PROCTITLE msg=audit(1628725910.095:33731): proctitle=726D0072656766696C65
+type=PATH msg=audit(1628725910.095:33731): item=1 name="regfile" inode=6854 dev=00:39 mode=0100664 ouid=1000 ogid=1000 rdev=00:00 nametype=DELETE cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=PATH msg=audit(1628725910.095:33731): item=0 name="/mercury/research/casefolding/linktest" inode=6956 dev=00:39 mode=040775 ouid=1000 ogid=1000 rdev=00:00 nametype=PARENT cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=CWD msg=audit(1628725910.095:33731): cwd="/mercury/research/casefolding/linktest"
+type=SYSCALL msg=audit(1628725910.095:33731): arch=c000003e syscall=263 success=yes exit=0 a0=ffffff9c a1=55aada571490 a2=0 a3=100 items=2 ppid=19959 pid=20006 auid=1000 uid=1000 gid=1000 euid=1000 suid=1000 fsuid=1000 egid=1000 sgid=1000 fsgid=1000 tty=pts8 ses=30 comm="rm" exe="/bin/rm" key="icase"
+----
+time->Wed Aug 11 19:51:50 2021
+type=PROCTITLE msg=audit(1628725910.099:33732): proctitle=726D00686172646C696E6B
+type=PATH msg=audit(1628725910.099:33732): item=1 name="hardlink" inode=6854 dev=00:39 mode=0100664 ouid=1000 ogid=1000 rdev=00:00 nametype=DELETE cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=PATH msg=audit(1628725910.099:33732): item=0 name="/mercury/research/casefolding/linktest" inode=6956 dev=00:39 mode=040775 ouid=1000 ogid=1000 rdev=00:00 nametype=PARENT cap_fp=0000000000000000 cap_fi=0000000000000000 cap_fe=0 cap_fver=0
+type=CWD msg=audit(1628725910.099:33732): cwd="/mercury/research/casefolding/linktest"
+type=SYSCALL msg=audit(1628725910.099:33732): arch=c000003e syscall=263 success=yes exit=0 a0=ffffff9c a1=55c7e4afb490 a2=0 a3=100 items=2 ppid=19959 pid=20007 auid=1000 uid=1000 gid=1000 euid=1000 suid=1000 fsuid=1000 egid=1000 sgid=1000 fsgid=1000 tty=pts8 ses=30 comm="rm" exe="/bin/rm" key="icase"
+----
+time->Wed Aug 11 19:51:50 2021
+type=CONFIG_CHANGE msg=audit(1628725910.175:33736): auid=1000 ses=30 op=remove_rule key="icase" list=4 res=1
