@@ -50,6 +50,7 @@ var (
 	flagPretty      = flag.Bool("pretty", false, "pretty-print json output")
 	flagAbsPath     = flag.Bool("abspath", false, "convert paths to absolute for non-json output")
 	flagLogBadOpen  = flag.Bool("logbadopen", false, "log uses of existing files with O_CREAT flag")
+	flagAusearch    = flag.String("ausearch", "", "show raw logs of using audit msg ID ex. 15451")
 	capSyscallNames bool // capability to convert syscall numbers to names
 )
 
@@ -78,6 +79,25 @@ func PopulateAuSyscalls() {
 	// fmt.Println(AuSyscalls)
 }
 
+// Run ausearch & find records matching msg ID
+func Ausearch(file, msg string) {
+	// build command
+	cmd := "ausearch"
+	args := []string{"-i", "-if", file, "-a", msg}
+	fmt.Println("running:", cmd, strings.Join(args, " "))
+
+	// run command
+	out, err := exec.Command(cmd, args...).Output()
+	if err != nil {
+		log.Printf("could not run ausearch: %v\n", err)
+		return
+	}
+
+	// show result
+	str := string(out)
+	fmt.Print(str)
+}
+
 func main() {
 	PopulateAuSyscalls()
 
@@ -87,6 +107,12 @@ func main() {
 	/* set logging */
 	log.SetPrefix("info: ")
 	log.SetFlags(0) // disable data & time
+
+	/* ausearch requested */
+	if len(*flagAusearch) > 0 {
+		Ausearch(*flagLogfile, *flagAusearch)
+		return
+	}
 
 	/* main logic */
 	if *flagVerbose {
