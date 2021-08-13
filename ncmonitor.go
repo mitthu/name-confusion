@@ -458,8 +458,11 @@ func (i Inode) String() string {
 	if *flagVerbose {
 		msg = i.Msg
 	} else {
-		msg = ""
-
+		// example: i.Msg = audit(1628098489.574:15451)
+		strArr := strings.Split(i.Msg, ":")
+		str := strArr[len(strArr)-1] // "15451)"
+		str = strings.Trim(str, ")") // "15451"
+		msg = "msg=" + str + ","     // "msg=15451,"
 	}
 
 	// example of string repr.:
