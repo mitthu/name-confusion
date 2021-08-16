@@ -45,6 +45,7 @@ var AuSyscalls map[string]string
 /* Holds command-line flags */
 var (
 	flagSamePID     = flag.Bool("samepid", false, "validate create-use within process boundary")
+	flagSameExe     = flag.Bool("sameexe", false, "validate create-use only for the same executable")
 	flagVerbose     = flag.Bool("verbose", false, "verbose output; lines starting with 'info:' are writted to stderr")
 	flagLogfile     = flag.String("file", LogFile, "auditd `logfile` to parse")
 	flagJson        = flag.Bool("json", false, "output in json")
@@ -636,6 +637,13 @@ func (tm *Timeline) Apply(i *Inode) {
 		// Log violations within process boundary
 		if *flagSamePID {
 			if i.Syscall.Pid != create.Syscall.Pid {
+				return
+			}
+		}
+
+		// Log violations for same exe
+		if *flagSameExe {
+			if i.Syscall.Exe != create.Syscall.Exe {
 				return
 			}
 		}
