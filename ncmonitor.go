@@ -44,6 +44,7 @@ var AuSyscalls map[string]string
 
 /* Holds command-line flags */
 var (
+	flagSamePID     = flag.Bool("samepid", false, "validate create-use within process boundary")
 	flagVerbose     = flag.Bool("verbose", false, "verbose output; lines starting with 'info:' are writted to stderr")
 	flagLogfile     = flag.String("file", LogFile, "auditd `logfile` to parse")
 	flagJson        = flag.Bool("json", false, "output in json")
@@ -625,10 +626,18 @@ func (tm *Timeline) Apply(i *Inode) {
 			return
 		}
 
+		// Find matching CREATE in history
 		var create Inode
 		var ok bool
 		if create, ok = tm.history[name]; !ok {
 			return // no corresponding CREATE
+		}
+
+		// Log violations within process boundary
+		if *flagSamePID {
+			if i.Syscall.Pid != create.Syscall.Pid {
+				return
+			}
 		}
 
 		// Test for inconsistency
