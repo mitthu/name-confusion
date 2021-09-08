@@ -42,6 +42,20 @@ go run ncmonitor.go -h # prints usage
 go doc -cmd -u
 ```
 
+Trace a command:
+```bash
+# Run cmd (ls) & find bad create-use pairs
+go run . -cmd="ls"
+
+# Additionally, save the collected traces
+go run . -cmd="ls" -savetrace
+```
+
+Install ncmonitor:
+```bash
+go build -o $GOPATH/bin/ncmonitor
+```
+
 ### Others
 
 Using git from docker container (os=alpine):

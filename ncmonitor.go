@@ -26,6 +26,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 	"os/exec"
 	"path"
 	"strconv"
@@ -48,6 +49,8 @@ var (
 	flagSameExe     = flag.Bool("sameexe", false, "validate create-use only for the same executable")
 	flagVerbose     = flag.Bool("verbose", false, "verbose output; lines starting with 'info:' are writted to stderr")
 	flagLogfile     = flag.String("file", LogFile, "auditd `logfile` to parse")
+	flagCmd         = flag.String("cmd", "", "run `<cmd>` & trace using auditd; run tool on this trace")
+	flagSaveTrace   = flag.Bool("savetrace", false, "save generated trace from -trace")
 	flagJson        = flag.Bool("json", false, "output in json")
 	flagPretty      = flag.Bool("pretty", false, "pretty-print json output")
 	flagAbsPath     = flag.Bool("abspath", false, "convert paths to absolute for non-json output")
@@ -114,6 +117,32 @@ func main() {
 	if len(*flagAusearch) > 0 {
 		Ausearch(*flagLogfile, *flagAusearch)
 		return
+	}
+
+	/* trace cmd & run tool */
+	if len(*flagCmd) > 0 {
+		// New trace
+		t, err := NewTrace(*flagCmd, "")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// Run
+		if e := t.Run(); e != nil {
+			t.Close()
+			log.Fatal(e)
+		}
+
+		// Save traces?
+		if !*flagSaveTrace {
+			defer t.Close()
+		} else {
+			os.Remove(t.ScriptFile)
+			fmt.Println("\ntrace: ausearch -i -if " + t.TraceFile)
+		}
+
+		// Get results
+		*flagLogfile = t.TraceFile
 	}
 
 	/* main logic */
