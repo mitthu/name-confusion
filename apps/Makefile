@@ -13,6 +13,7 @@ GENTESTS := $(ROOT)gentests.sh
 TAR_OUTPUT=/tmp/all.tar
 ZIP_OUTPUT=/tmp/all.zip
 DIFF_OUTPUT=/tmp/all.patch
+CP_OUTPUT=/tmp/cp.txt
 
 all:
 	@echo "specify utility to test"
@@ -39,6 +40,22 @@ diff: clean-compress
 
 patch: clean-expand
 	-patch -s -p1 <$(DIFF_OUTPUT)
+	@cat README
+
+# cp -ar src/* dst
+cp: clean-compress
+	echo `pwd`/tests/$(TEST)/ >$(CP_OUTPUT)
+
+docp: clean-expand
+	-cp -ar `cat $(CP_OUTPUT)` .
+	@cat $(TEST)/README
+
+# cp -ar src/ dst
+cpstar: clean-compress
+	echo `pwd`/tests/$(TEST)/\* >$(CP_OUTPUT)
+
+docpstar: clean-expand
+	-cp -ar `cat $(CP_OUTPUT)` .
 	@cat README
 
 # Clean

@@ -42,16 +42,16 @@ mkpush f01_patch
 touch NAME
 popd
 
-# f02: bad perms
+# f02: bad perms on content
 mkpush f02
 echo "bla" >name
 echo "BLA" >NAME; chmod 700 NAME
 
 cat >README <<EOF
-    f02: bad perms
+    f02: bad perms on content
     ---
-    okay: If name then perm=755. If NAME then perm=700.
-    fail: name has perms 700
+    okay: If name's content (=bla) then perm=755. If NAME's content (=BLA) then perm=700.
+    fail: name's content (=bla) has perms 700.
 EOF
 popd
 
@@ -77,16 +77,15 @@ touch NAME
 popd
 
 # f04: write to pipe
-# FIX
 mkpush f04
-echo "bla" >name
 mkfifo namE
+echo "bla" >NAME
 
 cat >README <<EOF
     f04: write to pipe
     ---
     okay: just create file or the pipe
-    fail: dump contents of name into namE|
+    fail: dump contents of NAME into namE|
 EOF
 popd
 
