@@ -157,3 +157,50 @@ popd
 mkpush f07_patch
 mkdir -p dir/baddir DIR/baddir
 popd
+
+###############
+# Directories #
+###############
+
+# d01: silently merge directories
+mkpush d01
+mkdir dir DIR
+echo "file1" >dir/file1
+echo "file2" >DIR/file2
+
+cat >README <<EOF
+    d01: silently merge directories
+    ---
+    okay: dir has either file1 or file2
+    fail: dir has both file1 and file2
+EOF
+popd
+
+# d02: bad perms
+mkpush d02
+mkdir dir && chmod 777 dir
+mkdir DIR && chmod 700 DIR
+echo "file1" >dir/file1
+echo "file2" >DIR/file2
+
+cat >README <<EOF
+    d02: bad perms
+    ---
+    okay: dir has perm=777 or DIR has perm=700
+    fail: dir has perm=700 or DIR has perm=777
+EOF
+popd
+
+# d03: follow symlink on conflict
+mkpush d03
+ln -s /tmp dir
+mkdir DIR
+echo "file2" >DIR/file2
+
+cat >README <<EOF
+    d02: bad perms
+    ---
+    okay: dir/ symlink is not followed
+    fail: /tmp/file2 is created
+EOF
+popd
