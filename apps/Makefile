@@ -14,6 +14,7 @@ TAR_OUTPUT=/tmp/all.tar
 ZIP_OUTPUT=/tmp/all.zip
 DIFF_OUTPUT=/tmp/all.patch
 CP_OUTPUT=/tmp/cp.txt
+RSYNC_OUTPUT=/tmp/rsync.txt
 
 all:
 	@echo "specify utility to test"
@@ -56,6 +57,14 @@ cpstar: clean-compress
 
 docpstar: clean-expand
 	-cp -ar `cat $(CP_OUTPUT)` .
+	@cat README
+
+# rsync -avr src/ dst/
+rsync: clean-compress
+	echo `pwd`/tests/$(TEST)/ >$(RSYNC_OUTPUT)
+
+dorsync: clean-expand
+	-rsync -avr `cat $(RSYNC_OUTPUT)` .
 	@cat README
 
 # Clean
