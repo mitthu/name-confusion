@@ -1,5 +1,9 @@
 # Run as: make -e TEST=f01 <target>
 #
+# Example:
+#   make -e TEST=f01 tar   # in case-sensitive dir
+#   make untar             # in case-insensitive dir
+#
 # Symlink to this Makefile from case sensitive & an insensitive
 # folders. Run the primary command (ex. tar) in sensitive one.
 # Run the complemantary command (ex. untar) in insensitive one.
@@ -49,7 +53,7 @@ cp: clean-compress
 
 docp: clean-expand
 	-cp -ar `cat $(CP_OUTPUT)` .
-	@cat $(TEST)/README
+	@cat `basename $$(cat $(CP_OUTPUT))`/README
 
 # cp -ar src/ dst
 cpstar: clean-compress

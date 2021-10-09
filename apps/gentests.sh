@@ -50,8 +50,8 @@ echo "BLA" >NAME; chmod 700 NAME
 cat >README <<EOF
     f02: bad perms on content
     ---
-    okay: If name's content (=bla) then perm=755. If NAME's content (=BLA) then perm=700.
-    fail: name's content (=bla) has perms 700.
+    okay: If content=bla then perm=755. If content=BLA then perm=700.
+    fail: content=bla has perms=700 OR content=BLA has perms=755
 EOF
 popd
 
