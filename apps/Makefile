@@ -33,7 +33,7 @@ untar: clean-expand
 
 # zip/unzip
 zip: clean-compress
-	cd tests/$(TEST); zip -r $(ZIP_OUTPUT) *
+	cd tests/$(TEST); zip --symlinks -r $(ZIP_OUTPUT) *
 
 unzip: clean-expand
 	-unzip $(ZIP_OUTPUT)

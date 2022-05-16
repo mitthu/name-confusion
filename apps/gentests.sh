@@ -269,6 +269,37 @@ cat >README <<EOF
 EOF
 popd
 
+# a3.1 symlink to file - file
+mkpush a3.1
+
+# create symlinked files
+rm -f /tmp/{file1,file2}
+echo "file1" >/tmp/file1
+echo "file2" >/tmp/file2
+chmod 777 /tmp/{file1,file2}
+
+echo "bla" >name1 && chmod 700 name1
+ln -s /tmp/file1 NAME1
+
+# for rsync (flipped case)
+ln -s /tmp/file2 name2
+echo "BLA" >NAME2 && chmod 700 NAME2
+
+cat >README <<EOF
+    a3.1: symlink to file - file
+    ---
+    okay:
+        symlink replaced by file
+        /tmp/{file1,file2} are empty
+    fail:
+        write new file to symlinked file
+        /tmp/{file1,file2} not empty
+        filename-filetype mismatch
+        filename-perm. mismatch
+        empty content
+EOF
+popd
+
 # a6.1 pipe - file
 mkpush a6.1
 
