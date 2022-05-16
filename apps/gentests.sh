@@ -198,9 +198,95 @@ mkdir DIR
 echo "file2" >DIR/file2
 
 cat >README <<EOF
-    d02: bad perms
+    d03: follow symlink on conflict
     ---
     okay: dir/ symlink is not followed
     fail: /tmp/file2 is created
+EOF
+popd
+
+####################
+# All Combinations #
+####################
+
+# a1.1 file - file
+mkpush a1.1
+echo "bla" >name && chmod 700 name
+echo "BLA" >NAME && chmod 777 NAME
+
+cat >README <<EOF
+    a1.1: file - file
+    ---
+    okay: prompt file being replaced
+    fail:
+        1) only one file exists w/o errors or prompt
+        2) incorrect filename-content pair (look at case of filename)
+        3) incorrect filename-perm pair
+EOF
+popd
+
+# a1.2 file (old) - empty directory (new)
+mkpush a1.2
+mkdir a b
+
+echo "bla" >a/name && chmod 700 a/name
+mkdir a/NAME
+
+# for rsync (flipped case)
+echo "BLA" >b/NAME && chmod 700 b/NAME
+mkdir b/name
+
+cat >README <<EOF
+    a1.2: file - empty directory
+    ---
+    okay: error OR lose empty directories
+    fail:
+        1) no error
+EOF
+popd
+
+
+# a1.3 file (old) - directory w/ file (new)
+mkpush a1.3
+mkdir a b
+
+echo "bla" >a/name && chmod 700 a/name
+mkdir a/NAME
+touch a/NAME/file1
+
+# for rsync (flipped case)
+echo "BLA" >b/NAME && chmod 700 b/NAME
+mkdir b/name
+touch b/name/file2
+
+cat >README <<EOF
+    a1.3: file - directory w/ contents
+    ---
+    okay: error
+    fail:
+        1) Silently lose entire sub-directory
+        2) No error reported
+EOF
+popd
+
+# a6.1 pipe - file
+mkpush a6.1
+
+echo "bla" >name1 && chmod 700 name1
+mkfifo NAME1      && chmod 777 NAME1
+
+# for rsync (flipped case)
+mkfifo name2      && chmod 777 name2
+echo "BLA" >NAME2 && chmod 700 NAME2
+
+
+cat >README <<EOF
+    a6.1: pipe - file
+    ---
+    okay:
+        pipe replaced by file
+        pipe perms=777
+    fail:
+        dump file contents to pipe
 EOF
 popd
