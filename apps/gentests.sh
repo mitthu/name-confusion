@@ -273,16 +273,16 @@ popd
 mkpush a3.1
 
 # create symlinked files
-rm -f /tmp/{file1,file2}
-echo "file1" >/tmp/file1
-echo "file2" >/tmp/file2
-chmod 777 /tmp/{file1,file2}
+rm -f /tmp/{sfile1,sfile2}
+echo "file1" >/tmp/sfile1
+echo "file2" >/tmp/sfile2
+chmod 777 /tmp/{sfile1,sfile2}
 
 echo "bla" >name1 && chmod 700 name1
-ln -s /tmp/file1 NAME1
+ln -s /tmp/sfile1 NAME1
 
 # for rsync (flipped case)
-ln -s /tmp/file2 name2
+ln -s /tmp/sfile2 name2
 echo "BLA" >NAME2 && chmod 700 NAME2
 
 cat >README <<EOF
@@ -290,12 +290,92 @@ cat >README <<EOF
     ---
     okay:
         symlink replaced by file
-        /tmp/{file1,file2} are empty
+        /tmp/{sfile1,sfile2} are empty
     fail:
         write new file to symlinked file
-        /tmp/{file1,file2} not empty
+        /tmp/{sfile1,sfile2} not empty
         filename-filetype mismatch
         filename-perm. mismatch
+        empty content
+EOF
+popd
+
+# a5.1 hardlink - file
+mkpush a5.1
+
+# create hardlinked file
+echo "hfileout" >../hfileout # (outside archive)
+echo "hfilein" >hfilein
+chmod 777 ../hfileout hfilein
+ln hfilein hcontrol
+
+# HL outside archive
+echo "name1" >name1 && chmod 700 name1
+ln ../hfileout NAME1
+
+# for rsync (flipped case)
+ln ../hfileout name2
+echo "NAME2" >NAME2 && chmod 700 NAME2
+
+# HL inside archive
+echo "name3" >name3 && chmod 700 name3
+ln hfilein NAME3
+
+# for rsync (flipped case)
+ln hfilein name4
+echo "NAME4" >NAME4 && chmod 700 NAME4
+
+cat >README <<EOF
+    a5.1: hardlink - file
+    ---
+    okay:
+        hardlink is honored
+            i(NAME3) = i(hfilein)
+            i(hcontrol) = i(hfilein)
+        content
+            NAME1 = hfileout (perms=777)
+            NAME3 = hfilein (perms=777)
+            Others, name=content & perms=777
+    fail:
+        ../hfilein or hfileout content is changed
+        filename-content mismatch
+        filename-perm. mismatch
+        empty content
+EOF
+popd
+
+# a5.5 hardlink - hardlink
+# Cases
+#   NC bet. hardlinks of eachother (cyclic)
+#   NC bet. hardlink to different targets
+mkpush a5.5
+
+# Cyclic
+echo "one" >name1
+ln name1 NAME1
+
+# (flipped case)
+echo "two" >NAME2
+ln NAME2 name2
+
+# Different targets
+echo "name3 / hfile1" >hfile1
+echo "NAME3 / hfile2" >hfile2
+ln hfile1 name3
+ln hfile2 NAME3
+
+cat >README <<EOF
+    a5.5: hardlink - hardlink
+    ---
+    okay:
+        hardlink is honored
+        content
+            name1/NAME1 contains "one"
+            name2/NAME2 contains "two"
+            name3 = "name3 / hfile1"
+            NAME3 = "NAME3 / hfile2"
+    fail:
+        filename-content mismatch
         empty content
 EOF
 popd

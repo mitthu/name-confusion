@@ -68,7 +68,7 @@ rsync: clean-compress
 	echo `pwd`/tests/$(TEST)/ >$(RSYNC_OUTPUT)
 
 dorsync: clean-expand
-	-rsync -avr `cat $(RSYNC_OUTPUT)` .
+	-rsync -avrH `cat $(RSYNC_OUTPUT)` .
 	@cat README
 
 # Clean
