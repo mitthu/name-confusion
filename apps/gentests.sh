@@ -364,6 +364,12 @@ echo "NAME3 / hfile2" >hfile2
 ln hfile1 name3
 ln hfile2 NAME3
 
+# Different targets (flipped)
+echo "name4 / zhfile1" >zhfile1
+echo "NAME4 / zhfile2" >zhfile2
+ln zhfile1 name4
+ln zhfile2 NAME4
+
 cat >README <<EOF
     a5.5: hardlink - hardlink
     ---
@@ -374,9 +380,11 @@ cat >README <<EOF
             name2/NAME2 contains "two"
             name3 = "name3 / hfile1"
             NAME3 = "NAME3 / hfile2"
+            name4 = "name4 / zhfile1"
+            NAME4 = "NAME4 / zhfile2"
     fail:
+        hfile* or zhfile* content is changed
         filename-content mismatch
-        empty content
 EOF
 popd
 
