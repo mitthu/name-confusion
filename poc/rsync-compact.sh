@@ -24,8 +24,10 @@ set -e
 # rsync ends up creating /tmp/config which is outside the TARGET/ directory.
 #
 # Tested on:
-# Ubuntu 20.04.4 LTS, rsync v3.1.3
-# Ubuntu 20.04.4 LTS, rsync v3.2.3
+# Ubuntu 20.04.4 LTS (bare-metal), rsync v3.1.3
+# Ubuntu 20.04.4 LTS (WSL 2), rsync v3.1.3
+# Ubuntu 20.04.4 LTS (bare-metal), rsync v3.2.3
+# Ubuntu 20.04.4 LTS (WSL 2), rsync v3.2.3
 #
 #
 # Could not test rsync v3.2.4 because ./configure threw the following error:
